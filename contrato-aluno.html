@@ -136,15 +136,28 @@
         .signature-info { font-size: 0.9rem; font-weight: bold; text-transform: uppercase; }
 
         /* Tabela Anexo de Plano */
-        .anexo-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 1rem; }
+        .table-responsive { /* Wrapper para tabelas em mobile */
+            display: block;
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 20px;
+        }
+        
+        .anexo-table { 
+            min-width: 600px; /* Força scroll no mobile */
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 15px; 
+            font-size: 1rem; 
+        }
         .anexo-table th, .anexo-table td { border: 1px solid var(--border); padding: 8px; text-align: center; }
         .anexo-table th { background-color: var(--secondary); color: white; }
         .anexo-table input, .anexo-table select { border: none; padding: 4px; width: 100%; text-align: center; font-family: Arial, sans-serif; background-color: transparent; }
         .anexo-table select { border-bottom: 1px dashed var(--dark-text); }
 
 
-        /* --- ESTILOS DE BOTÃO (COPIADO DO CÓDIGO DE REFERÊNCIA) --- */
-        
+        /* --- ESTILOS DE BOTÃO --- */
         .button-container {
             text-align: center;
             margin: 25px 0;
@@ -186,30 +199,15 @@
         }
 
         /* Efeitos de Hover e Active */
-        #btn-pdf:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(155, 94, 98, 0.4);
-        }
-        .btn-voltar:hover {
-            transform: translateY(-3px);
-            background-color: #e9ecef;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            color: var(--primary);
-        }
-        
-        #btn-pdf:active, .btn-voltar:active {
-            transform: translateY(-1px);
-        }
-
-        #btn-pdf:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-            transform: none;
-        }
-        /* --- FIM ESTILOS DE BOTÃO --- */
+        #btn-pdf:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(155, 94, 98, 0.4); }
+        .btn-voltar:hover { transform: translateY(-3px); background-color: #e9ecef; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); color: var(--primary); }
+        #btn-pdf:active, .btn-voltar:active { transform: translateY(-1px); }
 
         /* Estilos de Impressão */
         @media print {
+            .table-responsive { overflow-x: hidden; } 
+            .anexo-table { min-width: auto; } 
+            
             body { background: none; padding: 0; }
             .container { box-shadow: none; border: none; padding: 0; }
             .button-container, .form-group label, .form-full label { display: none !important; }
@@ -226,6 +224,53 @@
             .signature-info { font-size: 10pt; }
             .identificacao-paragrafo { display: block; }
         }
+        
+        /* CORREÇÃO PARA MOBILE */
+        @media (max-width: 768px) {
+            /* 1. Empilha os campos de identificação */
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            .form-row .form-group {
+                margin-bottom: 10px; /* Espaçamento entre os campos empilhados */
+            }
+            .form-group, .form-group label {
+                /* Garante que o label e o input usem 100% da largura */
+                display: block; 
+                flex-basis: auto;
+            }
+            
+            /* 2. Corrige campos de texto/valor flutuantes nos parágrafos (Cláusula 1.2, 3.2, 5.3) */
+            .form-group:not(.form-row) { /* Aplica-se a grupos que misturam texto e input */
+                flex-wrap: wrap; /* Permite quebrar em várias linhas */
+                align-items: flex-start;
+                margin-bottom: 15px; 
+            }
+            .form-group p, 
+            .form-group .input-fill {
+                /* Faz com que os inputs e parágrafos usem 100% da linha, empilhando-os */
+                width: 100% !important; 
+                display: block;
+                margin: 5px 0 !important; /* Adiciona margem entre os itens empilhados */
+            }
+            .form-group input[type="text"], 
+            .form-group input[type="date"],
+            .form-group input[type="number"] {
+                width: 100% !important; 
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+            }
+            
+            /* 3. Empilha os botões do rodapé */
+            .button-container { 
+                flex-direction: column; 
+                gap: 10px; 
+            }
+            .button-container a, .button-container button { 
+                max-width: 100%; 
+            }
+        }
     </style>
 </head>
 <body>
@@ -234,7 +279,7 @@
         
         <header>
             <h1>CONTRATO DE PRESTAÇÃO DE SERVIÇOS DE PILATES</h1>
-            <h2>Studio Mariana Marques Pilates</h2>
+            <h2>STUDIO [Nome do Studio] E ALUNO(A)</h2>
         </header>
 
         <div class="identificacao-paragrafo">
@@ -308,24 +353,26 @@
         <h2>CLÁUSULA TERCEIRA - DO PLANO E PAGAMENTO</h2>
         
         <p>3.1. O **CONTRATANTE** adere ao seguinte plano de aulas:</p>
-        <table class="anexo-table">
-            <thead>
-                <tr>
-                    <th style="width: 20%;">Plano</th>
-                    <th style="width: 20%;">Frequência Semanal</th>
-                    <th style="width: 25%;">Valor Mensal (R$)</th>
-                    <th style="width: 35%;">Forma de Pagamento</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><select><option>Mensal</option><option>Trimestral</option><option>Semestral</option><option>Anual</option></select></td>
-                    <td><input type="text" placeholder="Ex: 2x, 3x"></td>
-                    <td><input type="text" placeholder="Ex: 350,00"></td>
-                    <td><input type="text" placeholder="Ex: Recorrência Cartão, Boleto, PIX"></td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="anexo-table">
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">Plano</th>
+                        <th style="width: 20%;">Frequência Semanal</th>
+                        <th style="width: 25%;">Valor Mensal (R$)</th>
+                        <th style="width: 35%;">Forma de Pagamento</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><select><option>Mensal</option><option>Trimestral</option><option>Semestral</option><option>Anual</option></select></td>
+                        <td><input type="text" placeholder="Ex: 2x, 3x"></td>
+                        <td><input type="text" placeholder="Ex: 350,00"></td>
+                        <td><input type="text" placeholder="Ex: Recorrência Cartão, Boleto, PIX"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         
         <div class="form-group" style="margin-top: 20px;">
             <p>3.2. O vencimento da mensalidade ocorre no dia</p>
@@ -384,20 +431,16 @@
     <script>
         window.jsPDF = window.jspdf.jsPDF;
 
-        // Função para atualizar as assinaturas e a data/local final
         function updateContractInfo() {
-            // Assinaturas
             document.getElementById('assinatura_contratada').textContent = document.getElementById('contratada_nome').value.toUpperCase() || 'NOME DO STUDIO/EMPRESA';
             document.getElementById('assinatura_contratante').textContent = document.getElementById('contratante_nome').value.toUpperCase() || 'NOME COMPLETO DO ALUNO';
             
-            // Local e Data Final
             const foroCidade = document.getElementById('foro_cidade').value || 'CIDADE';
             const dataAtual = new Date().toLocaleDateString('pt-BR'); 
             document.getElementById('local_data_final').textContent = `${foroCidade}, ${dataAtual}.`;
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Atualiza o contrato sempre que um campo relevante muda
             const fieldsToMonitor = ['contratada_nome', 'contratante_nome', 'foro_cidade'];
             fieldsToMonitor.forEach(id => {
                 document.getElementById(id).addEventListener('input', updateContractInfo);
@@ -408,7 +451,7 @@
         });
 
 
-        // --- Função de Geração de PDF (Reutilizada) ---
+        // --- Função de Geração de PDF (Reutilizada e Corrigida para Paginação) ---
         function gerarPDF() {
             const contrato = document.getElementById('contrato-aluno-pilates');
             const feedbackMsg = document.getElementById('feedback-msg');

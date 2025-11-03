@@ -123,7 +123,16 @@
         }
         
         /* Tabela de Acertos Financeiros */
+        .table-responsive { /* Novo wrapper para tabelas que não cabem */
+            display: block;
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 20px;
+        }
+        
         .acertos-table {
+            min-width: 650px; /* Força o scroll horizontal no mobile */
             width: 100%;
             border-collapse: collapse;
             margin-top: 15px;
@@ -160,8 +169,7 @@
         .signature-info { font-size: 0.9rem; font-weight: bold; text-transform: uppercase; }
 
 
-        /* --- ESTILOS DE BOTÃO (COPIADO DO CÓDIGO DE REFERÊNCIA) --- */
-        
+        /* --- ESTILOS DE BOTÃO --- */
         .button-container {
             text-align: center;
             margin: 25px 0;
@@ -203,30 +211,15 @@
         }
 
         /* Efeitos de Hover e Active */
-        #btn-pdf:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(155, 94, 98, 0.4);
-        }
-        .btn-voltar:hover {
-            transform: translateY(-3px);
-            background-color: #e9ecef;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            color: var(--primary);
-        }
-        
-        #btn-pdf:active, .btn-voltar:active {
-            transform: translateY(-1px);
-        }
-
-        #btn-pdf:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-            transform: none;
-        }
-        /* --- FIM ESTILOS DE BOTÃO --- */
+        #btn-pdf:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(155, 94, 98, 0.4); }
+        .btn-voltar:hover { transform: translateY(-3px); background-color: #e9ecef; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); color: var(--primary); }
+        #btn-pdf:active, .btn-voltar:active { transform: translateY(-1px); }
 
         /* Estilos de Impressão */
         @media print {
+            .table-responsive { overflow-x: hidden; } /* Esconde o scroll na impressão */
+            .acertos-table { min-width: auto; } /* Volta ao normal para impressão A4 */
+            
             body { background: none; padding: 0; }
             .container { box-shadow: none; border: none; padding: 0; }
             .button-container, .form-group label, .form-full label { display: none !important; }
@@ -242,6 +235,48 @@
             .signatures { margin-top: 80px; }
             .signature-info { font-size: 10pt; }
             .identificacao-paragrafo { display: block; }
+        }
+        
+        /* CORREÇÃO PARA MOBILE */
+        @media (max-width: 768px) {
+            /* 1. Empilha os campos principais */
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            /* 2. Corrige campos de texto e valores flutuantes */
+            .form-group {
+                /* Garante que grupos de parágrafos/inputs quebram */
+                flex-wrap: wrap; 
+                align-items: flex-start;
+            }
+
+            .form-group p, 
+            .form-group .input-fill {
+                /* Permite quebra de linha para o texto e input */
+                display: block; 
+                width: 100%;
+                margin: 5px 0 !important; /* Adiciona margem entre os itens empilhados */
+            }
+            
+            /* Inputs específicos nos parágrafos devem usar 100% da largura */
+            .form-group input[type="text"], 
+            .form-group input[type="date"],
+            .form-group input[type="number"] {
+                width: 100% !important; 
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+            }
+
+            /* 3. Empilha os botões do rodapé */
+            .button-container { 
+                flex-direction: column; 
+                gap: 10px; 
+            }
+            .button-container a, .button-container button { 
+                max-width: 100%; 
+            }
         }
     </style>
 </head>
@@ -302,37 +337,39 @@
         <h2>CLÁUSULA TERCEIRA - DOS ACERTOS FINANCEIROS E QUITAÇÃO</h2>
         
         <h3>3.1. Resumo dos Acertos:</h3>
-        <table class="acertos-table">
-            <thead>
-                <tr>
-                    <th style="width: 30%;">Item</th>
-                    <th style="width: 30%;">Valor (R$)</th>
-                    <th style="width: 40%;">Observação</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Valor Total Pago Antecipadamente pelo Aluno</td>
-                    <td><input type="text" placeholder="R$"></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>Valor dos Serviços Já Prestados/Aulas Utilizadas</td>
-                    <td><input type="text" placeholder="R$"></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>Multa Contratual (Se aplicável, conforme Cláusula X do contrato original)</td>
-                    <td><input type="text" placeholder="R$"></td>
-                    <td><input type="text" placeholder="Ex: 10% sobre os meses restantes."></td>
-                </tr>
-                <tr>
-                    <td>**SALDO FINAL A SER DEVOLVIDO AO ALUNO**</td>
-                    <td><input type="text" placeholder="R$"></td>
-                    <td>**Este valor será devolvido ao aluno.**</td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="acertos-table">
+                <thead>
+                    <tr>
+                        <th style="width: 30%;">Item</th>
+                        <th style="width: 30%;">Valor (R$)</th>
+                        <th style="width: 40%;">Observação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Valor Total Pago Antecipadamente pelo Aluno</td>
+                        <td><input type="text" placeholder="R$"></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Valor dos Serviços Já Prestados/Aulas Utilizadas</td>
+                        <td><input type="text" placeholder="R$"></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Multa Contratual (Se aplicável, conforme Cláusula X do contrato original)</td>
+                        <td><input type="text" placeholder="R$"></td>
+                        <td><input type="text" placeholder="Ex: 10% sobre os meses restantes."></td>
+                    </tr>
+                    <tr>
+                        <td>**SALDO FINAL A SER DEVOLVIDO AO ALUNO**</td>
+                        <td><input type="text" placeholder="R$"></td>
+                        <td>**Este valor será devolvido ao aluno.**</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
         <div class="form-group" style="margin-top: 20px;">
             <p>3.2. O valor de quitação (R$</p>
@@ -384,20 +421,16 @@
     <script>
         window.jsPDF = window.jspdf.jsPDF;
 
-        // Função para atualizar as assinaturas e a data/local final
         function updateContractInfo() {
-            // Assinaturas
             document.getElementById('assinatura_contratada').textContent = document.getElementById('studio_nome').value.toUpperCase() || 'NOME DO STUDIO/EMPRESA';
             document.getElementById('assinatura_contratante').textContent = document.getElementById('aluno_nome').value.toUpperCase() || 'NOME COMPLETO DO ALUNO';
             
-            // Local e Data Final
             const foroCidade = document.getElementById('foro_cidade').value || 'CIDADE';
             const dataAtual = new Date().toLocaleDateString('pt-BR'); 
             document.getElementById('local_data_final').textContent = `${foroCidade}, ${dataAtual}.`;
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Atualiza o contrato sempre que um campo relevante muda
             const fieldsToMonitor = ['studio_nome', 'aluno_nome', 'foro_cidade'];
             fieldsToMonitor.forEach(id => {
                 document.getElementById(id).addEventListener('input', updateContractInfo);
@@ -408,7 +441,7 @@
         });
 
 
-        // --- Função de Geração de PDF (Reutilizada) ---
+        // --- Função de Geração de PDF (Reutilizada e Corrigida para Paginação) ---
         function gerarPDF() {
             const contrato = document.getElementById('contrato-distrato');
             const feedbackMsg = document.getElementById('feedback-msg');
@@ -437,7 +470,7 @@
                 heightLeft -= pageHeight;
                 
                 while (heightLeft >= 0) {
-                    position = heightLeft - pageHeight; 
+                    position = position - pageHeight; 
                     pdf.addPage();
                     pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
                     heightLeft -= pageHeight;

@@ -38,7 +38,7 @@
         }
 
         .container {
-            max-width: 900px; /* Levemente maior para a tabela de progressão */
+            max-width: 900px;
             margin: 0 auto;
             background-color: white;
             border-radius: 16px;
@@ -128,12 +128,18 @@
             align-items: center;
             gap: 8px;
         }
-        .add-exercise-btn:hover {
-            background-color: #218838;
+
+        /* CONTAINER DA TABELA PARA SCROLL HORIZONTAL */
+        .table-responsive {
+            display: block;
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         .progression-table {
             width: 100%;
+            min-width: 700px; /* Garante que a tabela tenha um mínimo para o scroll horizontal */
             border-collapse: collapse;
             margin-top: 10px;
         }
@@ -166,10 +172,9 @@
             box-sizing: border-box;
         }
 
-        .progression-table input:focus, .progression-table select:focus {
-            border-color: var(--primary);
-            background-color: white;
-            box-shadow: none;
+        .progression-status {
+            text-align: center;
+            width: 100px;
         }
         
         .remove-btn {
@@ -183,22 +188,8 @@
             transition: background-color 0.2s;
         }
         
-        .remove-btn:hover { background-color: #c82333; }
         .action-cell { text-align: center; width: 40px; }
 
-        /* Estilo para marcar progresso */
-        .progression-status {
-            text-align: center;
-            width: 100px;
-        }
-        .progression-status select {
-            padding: 5px;
-            background-color: white;
-            border-radius: 4px;
-        }
-
-        /* --- FIM ESTILOS DA TABELA DE PROGRESSÃO --- */
-        
         /* Estilos dos Botões de Rodapé */
         .button-container {
             text-align: center;
@@ -245,10 +236,25 @@
                 display: none !important;
             }
         }
+        
+        /* CORREÇÃO PARA MOBILE */
         @media (max-width: 768px) {
-            .button-container { flex-direction: column; gap: 10px; }
-            .button-container a, .button-container button { max-width: 100%; }
-            .progression-table { display: block; overflow-x: auto; white-space: nowrap; }
+            .form-row { 
+                flex-direction: column; 
+                gap: 0; /* Remove o gap na vertical para economizar espaço */
+            } 
+            
+            .button-container { 
+                flex-direction: column; 
+                gap: 10px; 
+            }
+            .button-container a, .button-container button { 
+                max-width: 100%; 
+            }
+            /* A tabela agora depende do .table-responsive (definido acima) */
+            .section {
+                 padding: 15px;
+            }
         }
     </style>
 </head>
@@ -284,7 +290,7 @@
         </div>
 
         <div class="section">
-            <h2><i class="fas fa-arrow-alt-circle-up"></i> Exercícios Focais de Progressão</h2>
+            <h2><i class="fas fa-arrow-trend-up"></i> Exercícios Focais de Progressão</h2>
             <p class="subtitle" style="margin-bottom: 10px;">Liste os exercícios-chave e planeje as etapas de dificuldade (Variações/Cargas).</p>
             
             <div class="progression-controls">
@@ -293,33 +299,35 @@
                 </button>
             </div>
 
-            <table class="progression-table">
-                <thead>
-                    <tr>
-                        <th style="width: 25%;">Exercício Base</th>
-                        <th style="width: 30%;">Nível Atual / Variação Utilizada</th>
-                        <th style="width: 30%;">Próximo Nível / Meta de Variação</th>
-                        <th class="progression-status">Status</th>
-                        <th class="action-cell">Ação</th>
-                    </tr>
-                </thead>
-                <tbody id="progression-list">
-                    <tr id="prog-row-0">
-                        <td><input type="text" name="exercicio-0" placeholder="Ex: The Hundred (O Cem)"></td>
-                        <td><input type="text" name="nivel_atual-0" placeholder="Ex: Pés no chão, 3 respirações"></td>
-                        <td><input type="text" name="proximo_nivel-0" placeholder="Ex: Pés em table top, 5 respirações"></td>
-                        <td class="progression-status">
-                             <select name="status-0">
-                                <option value="planejado">Planejado</option>
-                                <option value="em_progresso">Em Progresso</option>
-                                <option value="dominado">Dominado (Pronto para avançar)</option>
-                                <option value="barreira">Barreira/Rever</option>
-                            </select>
-                        </td>
-                        <td class="action-cell"><button type="button" class="remove-btn" onclick="removerExercicioProgressao('prog-row-0')"><i class="fas fa-trash"></i></button></td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="progression-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 25%;">Exercício Base</th>
+                            <th style="width: 30%;">Nível Atual / Variação Utilizada</th>
+                            <th style="width: 30%;">Próximo Nível / Meta de Variação</th>
+                            <th class="progression-status">Status</th>
+                            <th class="action-cell">Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="progression-list">
+                        <tr id="prog-row-0">
+                            <td><input type="text" name="exercicio-0" placeholder="Ex: The Hundred (O Cem)"></td>
+                            <td><input type="text" name="nivel_atual-0" placeholder="Ex: Pés no chão, 3 respirações"></td>
+                            <td><input type="text" name="proximo_nivel-0" placeholder="Ex: Pés em table top, 5 respirações"></td>
+                            <td class="progression-status">
+                                 <select name="status-0">
+                                    <option value="planejado">Planejado</option>
+                                    <option value="em_progresso">Em Progresso</option>
+                                    <option value="dominado">Dominado (Pronto para avançar)</option>
+                                    <option value="barreira">Barreira/Rever</option>
+                                </select>
+                            </td>
+                            <td class="action-cell"><button type="button" class="remove-btn" onclick="removerExercicioProgressao('prog-row-0')"><i class="fas fa-trash"></i></button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <div class="section">
@@ -348,9 +356,8 @@
     <div class="feedback" id="feedback-msg">Gerando PDF... Aguarde!</div>
 
     <script>
-        let progressionCounter = 1; // Contador para ID únicas da tabela de progressão
+        let progressionCounter = 1;
 
-        // Função para adicionar uma nova linha de progressão
         function adicionarExercicioProgressao() {
             const list = document.getElementById('progression-list');
             const newRowId = `prog-row-${progressionCounter}`;
@@ -375,7 +382,6 @@
             progressionCounter++;
         }
 
-        // Função para remover uma linha de progressão
         function removerExercicioProgressao(rowId) {
             const row = document.getElementById(rowId);
             if (row) {
@@ -383,7 +389,7 @@
             }
         }
 
-        // --- Funções de Geração de PDF (Mantidas) ---
+        // --- FUNÇÃO DE GERAÇÃO DE PDF CORRIGIDA (Versão estável para paginação) ---
         window.jsPDF = window.jspdf.jsPDF;
 
         function gerarPDF() {
@@ -396,8 +402,7 @@
             html2canvas(ficha, {
                 scale: 2, 
                 useCORS: true,
-                // Ignora os botões de controle ao tirar a foto
-                ignoreElements: (element) => element.classList.contains('progression-controls') || element.classList.contains('remove-btn')
+                ignoreElements: (element) => element.classList.contains('progression-controls') || element.classList.contains('remove-btn') || element.classList.contains('button-container')
             }).then(canvas => {
                 
                 const { jsPDF } = window.jspdf;
@@ -410,11 +415,13 @@
                 let heightLeft = imgHeight;
                 let position = 0;
                 
+                // 1. Adiciona a primeira página
                 pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
                 heightLeft -= pageHeight;
                 
+                // 2. Itera para adicionar páginas se o conteúdo for maior que A4
                 while (heightLeft >= 0) {
-                    position = heightLeft - imgHeight;
+                    position = position - pageHeight;
                     pdf.addPage();
                     pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
                     heightLeft -= pageHeight;
@@ -428,9 +435,7 @@
             });
         }
         
-        // Inicialmente adicionar uma linha e esconder o feedback
         document.addEventListener('DOMContentLoaded', function() {
-            // Garante que a primeira linha de exemplo use a função de remoção
             document.getElementById('prog-row-0').querySelector('.remove-btn').onclick = function() {
                 removerExercicioProgressao('prog-row-0');
             };

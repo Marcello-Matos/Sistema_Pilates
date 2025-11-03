@@ -195,7 +195,15 @@
             transform: scale(1.1);
         }
 
+        .eva-table-container {
+            /* Novo container para controlar o overflow horizontal da tabela EVA no mobile */
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
         .eva-table {
+            /* Min-width para garantir que todos os 11 boxes caibam em uma linha, permitindo o scroll */
+            min-width: 450px; 
             width: 100%;
             border-collapse: collapse;
             margin-top: 8px;
@@ -206,10 +214,11 @@
 
         .eva-table td {
             border: 1px solid var(--border);
-            padding: 10px;
+            padding: 10px 5px; /* Ajuste no padding para caber mais */
             text-align: center;
             background-color: white;
             font-size: 0.9rem;
+            width: calc(100% / 11); /* Garante que as 11 colunas tentem caber */
         }
 
         .eva-table tr:first-child td {
@@ -229,18 +238,16 @@
             margin-top: 5px;
         }
 
-        /* --- ESTILOS DOS BOTÕES (Alterado para incluir Voltar) --- */
+        /* --- ESTILOS DOS BOTÕES --- */
         .button-container {
             text-align: center;
             margin: 25px 0;
             padding: 0 20px;
-            /* Adicionado Flexbox para alinhar e espaçar os botões */
             display: flex; 
             justify-content: center;
             gap: 15px; 
         }
 
-        /* Estilo comum para botões no container */
         .button-container a, .button-container button {
             display: inline-flex;
             align-items: center;
@@ -253,11 +260,10 @@
             font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
-            text-decoration: none; /* Importante para o link Voltar */
+            text-decoration: none; 
             max-width: 280px;
             width: 100%;
         }
-
 
         #btn-pdf {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
@@ -265,14 +271,12 @@
             box-shadow: 0 4px 15px rgba(155, 94, 98, 0.3);
         }
         
-        /* NOVO ESTILO PARA O BOTÃO VOLTAR */
         .btn-voltar {
             background-color: var(--light-bg);
             color: var(--dark-text);
             border: 1px solid var(--border);
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
-        /* FIM NOVO ESTILO */
 
         /* Efeitos de Hover e Active */
         #btn-pdf:hover {
@@ -322,8 +326,14 @@
 
         @media (max-width: 768px) {
             .form-row {
+                /* Empilha campos que estavam lado a lado */
                 flex-direction: column;
                 gap: 0;
+            }
+            
+            .form-row .form-group {
+                /* Garante que grupos de campos empilhados tenham margem */
+                margin-bottom: 15px; 
             }
             
             h1 {
@@ -343,7 +353,6 @@
                 max-width: 95%;
             }
 
-            /* Empilha os botões em telas pequenas */
             .button-container {
                 flex-direction: column;
                 gap: 10px;
@@ -410,38 +419,42 @@
                 <label for="queixa">Queixa Principal (dor, desconforto, etc.)</label>
                 <textarea id="queixa" name="queixa" rows="3" placeholder="Descreva sua queixa principal"></textarea>
             </div>
-             <div class="form-group">
+            
+            <div class="form-group">
                 <label>Nível da Dor (EVA - Escala Visual Analógica)</label>
-                <table class="eva-table">
-                    <tr>
-                        <td>0</td>
-                        <td>1</td>
-                        <td>2</td>
-                        <td>3</td>
-                        <td>4</td>
-                        <td>5</td>
-                        <td>6</td>
-                        <td>7</td>
-                        <td>8</td>
-                        <td>9</td>
-                        <td>10</td>
-                    </tr>
-                    <tr>
-                        <td><input type="radio" name="eva" value="0"></td>
-                        <td><input type="radio" name="eva" value="1"></td>
-                        <td><input type="radio" name="eva" value="2"></td>
-                        <td><input type="radio" name="eva" value="3"></td>
-                        <td><input type="radio" name="eva" value="4"></td>
-                        <td><input type="radio" name="eva" value="5"></td>
-                        <td><input type="radio" name="eva" value="6"></td>
-                        <td><input type="radio" name="eva" value="7"></td>
-                        <td><input type="radio" name="eva" value="8"></td>
-                        <td><input type="radio" name="eva" value="9"></td>
-                        <td><input type="radio" name="eva" value="10"></td>
-                    </tr>
-                </table>
+                <div class="eva-table-container">
+                    <table class="eva-table">
+                        <tr>
+                            <td>0</td>
+                            <td>1</td>
+                            <td>2</td>
+                            <td>3</td>
+                            <td>4</td>
+                            <td>5</td>
+                            <td>6</td>
+                            <td>7</td>
+                            <td>8</td>
+                            <td>9</td>
+                            <td>10</td>
+                        </tr>
+                        <tr>
+                            <td><input type="radio" name="eva" value="0"></td>
+                            <td><input type="radio" name="eva" value="1"></td>
+                            <td><input type="radio" name="eva" value="2"></td>
+                            <td><input type="radio" name="eva" value="3"></td>
+                            <td><input type="radio" name="eva" value="4"></td>
+                            <td><input type="radio" name="eva" value="5"></td>
+                            <td><input type="radio" name="eva" value="6"></td>
+                            <td><input type="radio" name="eva" value="7"></td>
+                            <td><input type="radio" name="eva" value="8"></td>
+                            <td><input type="radio" name="eva" value="9"></td>
+                            <td><input type="radio" name="eva" value="10"></td>
+                        </tr>
+                    </table>
+                </div>
                 <div class="eva-scale-label">0 = Sem Dor | 10 = Pior Dor Possível</div>
             </div>
+            
             <div class="form-group">
                 <label>Objetivos com o Pilates (Pode selecionar mais de um)</label>
                 <div class="checkbox-group">
@@ -519,7 +532,7 @@
     <div class="feedback" id="feedback-msg">Gerando PDF... Aguarde!</div>
 
     <script>
-        // Função Principal do JavaScript para gerar o PDF
+        // Função Principal do JavaScript para gerar o PDF (Mantida a lógica original)
         window.jsPDF = window.jspdf.jsPDF;
 
         function gerarPDF() {
@@ -564,9 +577,8 @@
             });
         }
 
-        // Função para limpar todo o formulário (mantida)
+        // Função para limpar todo o formulário (Mantida)
         function limparFormulario() {
-            // ... (código da função limparFormulario)
             document.getElementById('nome').value = '';
             document.getElementById('profissao').value = '';
             document.getElementById('contato').value = '';
@@ -593,7 +605,7 @@
             document.getElementById('cirurgias-field').style.display = 'none';
         }
 
-        // Mostrar/ocultar campos condicionais (mantida)
+        // Mostrar/ocultar campos condicionais (Mantida)
         document.addEventListener('DOMContentLoaded', function() {
             // Para medicamentos
             const medicamentosRadios = document.querySelectorAll('input[name="medicamentos"]');

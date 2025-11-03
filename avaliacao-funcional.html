@@ -17,7 +17,6 @@
             --accent: #000000;
             --light-bg: #f8f9fa;
             --dark-text: #333;
-            --light-text: #6c757d;
             --border: #e0e0e0;
             --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             --transition: all 0.3s ease;
@@ -216,6 +215,8 @@
         }
 
         .semaforo-group label {
+            /* Faz com que os rótulos preencham o espaço disponível */
+            flex: 1; 
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -320,8 +321,17 @@
 
         @media (max-width: 768px) {
             .form-row {
+                /* CORREÇÃO: Força o empilhamento dos campos de Identificação */
                 flex-direction: column;
                 gap: 0;
+            }
+            .form-row .form-group {
+                 /* Adiciona margem vertical aos campos empilhados */
+                 margin-bottom: 15px; 
+            }
+            .form-row .form-group:last-child {
+                 /* Remove a margem extra do último item para não duplicar o espaçamento */
+                 margin-bottom: 0; 
             }
             
             h1 {
@@ -342,13 +352,23 @@
             }
 
             .test-items {
+                /* CORREÇÃO: Força a grade de testes a empilhar em uma única coluna */
                 grid-template-columns: 1fr;
+                gap: 15px; 
+            }
+            
+            .semaforo-group {
+                /* Garante que o semáforo ocupe toda a largura disponível no item */
+                width: 100%;
+                justify-content: space-between;
+                gap: 5px;
             }
             .semaforo-group label {
-                padding: 5px;
-                font-size: 0.8rem;
-                flex: 1;
+                /* Garante que os rótulos sejam grandes e fáceis de tocar */
+                padding: 8px 5px;
+                font-size: 0.9rem;
             }
+            
             /* Empilha os botões em telas pequenas */
             .button-container {
                 flex-direction: column;
@@ -380,7 +400,7 @@
                     <label for="nome">Nome Completo</label>
                     <input type="text" id="nome" name="nome" placeholder="Nome do aluno(a)">
                 </div>
-                <div class="form-group" style="flex: 0.5;">
+                <div class="form-group">
                     <label for="dataAvaliacao">Data da Avaliação</label>
                     <input type="date" id="dataAvaliacao" name="dataAvaliacao">
                 </div>
@@ -513,7 +533,7 @@
     <div class="feedback" id="feedback-msg">Gerando PDF... Aguarde!</div>
 
     <script>
-        // Função Principal do JavaScript para gerar o PDF (Mantida a lógica original)
+        // Função Principal do JavaScript para gerar o PDF (Corrigida a paginação)
         window.jsPDF = window.jspdf.jsPDF;
 
         function gerarPDF() {
@@ -541,12 +561,12 @@
                 let heightLeft = imgHeight;
                 let position = 0;
                 
-                // 4. Adicionar a Imagem ao PDF (Tratando múltiplas páginas)
+                // 4. Adicionar a Imagem ao PDF (Tratando múltiplas páginas - Lógica Corrigida)
                 pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
                 heightLeft -= pageHeight;
                 
                 while (heightLeft >= 0) {
-                    position = heightLeft - imgHeight;
+                    position = position - pageHeight;
                     pdf.addPage();
                     pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
                     heightLeft -= pageHeight;

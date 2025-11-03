@@ -325,8 +325,17 @@
 
         @media (max-width: 768px) {
             .form-row {
+                /* CORREÇÃO: Força o empilhamento dos campos de Identificação */
                 flex-direction: column;
                 gap: 0;
+            }
+            .form-row .form-group {
+                 /* Adiciona margem vertical aos campos empilhados */
+                 margin-bottom: 15px; 
+            }
+            .form-row .form-group:last-child {
+                 /* Remove a margem extra do último item para não duplicar o espaçamento */
+                 margin-bottom: 0; 
             }
             
             h1 {
@@ -346,7 +355,9 @@
                 max-width: 95%;
             }
             .postural-checks {
+                /* CORREÇÃO: Força a grade postural a empilhar em uma única coluna */
                 grid-template-columns: 1fr;
+                gap: 15px; /* Adiciona espaçamento entre os itens empilhados da grade */
             }
             /* Empilha os botões em telas pequenas */
             .button-container {
@@ -379,7 +390,7 @@
                     <label for="nome">Nome Completo</label>
                     <input type="text" id="nome" name="nome" placeholder="Nome do aluno(a)">
                 </div>
-                <div class="form-group" style="flex: 0.5;">
+                <div class="form-group">
                     <label for="dataAvaliacao">Data da Avaliação</label>
                     <input type="date" id="dataAvaliacao" name="dataAvaliacao">
                 </div>
@@ -486,7 +497,7 @@
                     </div>
                     <div class="postural-item">
                         <label for="curvas_toraxica">Curva Torácica</label>
-                        <select id="curvas_toraxica" name="curvas_toracica">
+                        <select id="curvas_toracica" name="curvas_toracica">
                             <option value="">Normal</option>
                             <option value="cifose">Aumento (Cifose)</option>
                             <option value="reta">Diminuição (Reta)</option>
@@ -601,8 +612,9 @@
                 pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
                 heightLeft -= pageHeight;
                 
+                // CORREÇÃO DE PAGINAÇÃO: Usamos pageHeight para deslocar a posição, não imgHeight
                 while (heightLeft >= 0) {
-                    position = heightLeft - imgHeight;
+                    position = position - pageHeight; 
                     pdf.addPage();
                     pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
                     heightLeft -= pageHeight;

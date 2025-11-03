@@ -87,8 +87,17 @@
             margin-bottom: 15px;
             gap: 10px;
         }
+        
+        /* NOVO CONTAINER RESPONSIVO PARA A TABELA */
+        .table-responsive {
+            display: block;
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
 
         .exercise-table {
+            min-width: 700px; /* Garante que a tabela force o scroll no mobile */
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
@@ -121,12 +130,6 @@
             width: calc(100% + 8px); 
             box-sizing: border-box;
         }
-
-        .exercise-table input:focus, .exercise-table select:focus {
-            border-color: var(--primary);
-            background-color: white;
-            box-shadow: none;
-        }
         
         .action-cell {
             text-align: center;
@@ -142,10 +145,6 @@
             cursor: pointer;
             font-size: 0.8rem;
             transition: background-color 0.2s;
-        }
-        
-        .remove-btn:hover {
-            background-color: #c82333;
         }
 
         @media print {
@@ -206,19 +205,17 @@
             max-width: 280px;
             width: 100%;
         }
-
-        .add-exercise-btn {
-            background-color: #28a745; 
-            color: white;
-            padding: 8px 15px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            max-width: 250px;
-            width: auto;
-        }
-
+        
         /* Adaptação para mobile */
         @media (max-width: 768px) {
+            .form-row {
+                /* Empilha campos de identificação */
+                flex-direction: column;
+                gap: 0;
+            }
+            .form-row .form-group {
+                margin-bottom: 15px; /* Adiciona margem entre os campos empilhados */
+            }
             .button-container {
                 flex-direction: column;
                 gap: 10px;
@@ -230,11 +227,13 @@
                 padding: 6px;
                 font-size: 0.85rem;
             }
+            /* Remove esta regra que estava quebrando o layout:
             .exercise-table {
                 display: block;
                 overflow-x: auto; 
                 white-space: nowrap;
             }
+            A responsividade é agora controlada pela div .table-responsive */
         }
     </style>
 </head>
@@ -282,28 +281,30 @@
                 </button>
             </div>
 
-            <table class="exercise-table">
-                <thead>
-                    <tr>
-                        <th style="width: 15%;">Aparelho</th>
-                        <th style="width: 25%;">Exercício / Variação</th>
-                        <th style="width: 15%;">Molas / Carga</th>
-                        <th style="width: 15%;">Séries x Reps</th>
-                        <th style="width: 25%;">Desempenho / Observação</th>
-                        <th class="action-cell">Ação</th>
-                    </tr>
-                </thead>
-                <tbody id="exercise-list">
-                    <tr id="row-0">
-                        <td><input type="text" name="aparelho-0" placeholder="Ex: Reformer, Mat, Chair"></td>
-                        <td><input type="text" name="exercicio-0" placeholder="Ex: Hundred, Footwork, Short Spine"></td>
-                        <td><input type="text" name="molas-0" placeholder="Ex: 2 Vermelhas, 1 Azul"></td>
-                        <td><input type="text" name="reps-0" placeholder="Ex: 3x10, 5 resp."></td>
-                        <td><input type="text" name="desempenho-0" placeholder="Ex: Controle ótimo, Pouca mobilidade, Dor lombar"></td>
-                        <td class="action-cell"><button type="button" class="remove-btn" onclick="removerExercicio('row-0')"><i class="fas fa-trash"></i></button></td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="exercise-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 15%;">Aparelho</th>
+                            <th style="width: 25%;">Exercício / Variação</th>
+                            <th style="width: 15%;">Molas / Carga</th>
+                            <th style="width: 15%;">Séries x Reps</th>
+                            <th style="width: 25%;">Desempenho / Observação</th>
+                            <th class="action-cell">Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="exercise-list">
+                        <tr id="row-0">
+                            <td><input type="text" name="aparelho-0" placeholder="Ex: Reformer, Mat, Chair"></td>
+                            <td><input type="text" name="exercicio-0" placeholder="Ex: Hundred, Footwork, Short Spine"></td>
+                            <td><input type="text" name="molas-0" placeholder="Ex: 2 Vermelhas, 1 Azul"></td>
+                            <td><input type="text" name="reps-0" placeholder="Ex: 3x10, 5 resp."></td>
+                            <td><input type="text" name="desempenho-0" placeholder="Ex: Controle ótimo, Pouca mobilidade, Dor lombar"></td>
+                            <td class="action-cell"><button type="button" class="remove-btn" onclick="removerExercicio('row-0')"><i class="fas fa-trash"></i></button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <div class="section">
@@ -379,8 +380,8 @@
                 const imgData = canvas.toDataURL('image/png');
                 const pdf = new jsPDF('p', 'mm', 'a4'); 
                 
-                const imgWidth = 210; // Largura A4 em mm
-                const pageHeight = 297; // Altura A4 em mm
+                const imgWidth = 210; 
+                const pageHeight = 297; 
                 const imgHeight = canvas.height * imgWidth / canvas.width;
                 let heightLeft = imgHeight;
                 let position = 0;
@@ -391,7 +392,6 @@
                 
                 // 2. Itera para adicionar páginas se o conteúdo for maior que A4
                 while (heightLeft >= 0) {
-                    // CORREÇÃO: A posição agora é subtraída pelo pageHeight
                     position = position - pageHeight;
                     pdf.addPage();
                     pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
@@ -410,9 +410,12 @@
         
         document.addEventListener('DOMContentLoaded', function() {
             // Garante que o botão de remover na linha de exemplo funcione
-            document.getElementById('row-0').querySelector('.remove-btn').onclick = function() {
-                removerExercicio('row-0');
-            };
+            if (document.getElementById('row-0')) {
+                 document.getElementById('row-0').querySelector('.remove-btn').onclick = function() {
+                    removerExercicio('row-0');
+                };
+            }
+           
             document.getElementById('feedback-msg').style.display = 'none';
         });
     </script>

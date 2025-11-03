@@ -136,7 +136,20 @@
         .signature-info { font-size: 0.9rem; font-weight: bold; text-transform: uppercase; }
 
         /* Tabela Anexo */
-        .anexo-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 1rem; }
+        .table-responsive { /* Novo wrapper para tabelas que não cabem */
+            display: block;
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 20px;
+        }
+        .anexo-table { 
+            min-width: 600px; /* Força scroll em telas pequenas */
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 15px; 
+            font-size: 1rem; 
+        }
         .anexo-table th, .anexo-table td { border: 1px solid var(--border); padding: 8px; text-align: center; }
         .anexo-table th { background-color: var(--secondary); color: white; }
         .anexo-table input { border: none; padding: 4px; width: 100%; text-align: center; font-family: Arial, sans-serif; background-color: transparent; }
@@ -208,6 +221,9 @@
 
         /* Estilos de Impressão */
         @media print {
+            .table-responsive { overflow-x: hidden; } /* Esconde o scroll na impressão */
+            .anexo-table { min-width: auto; } /* Volta ao normal para impressão A4 */
+            
             body { background: none; padding: 0; }
             .container { box-shadow: none; border: none; padding: 0; }
             .button-container, .form-group label, .form-full label { display: none !important; }
@@ -223,6 +239,31 @@
             .signatures { margin-top: 80px; }
             .signature-info { font-size: 10pt; }
             .identificacao-paragrafo { display: block; }
+        }
+        
+        /* CORREÇÃO PARA MOBILE */
+        @media (max-width: 768px) {
+            /* Empilha os campos que estavam lado a lado */
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            .form-group, .form-row .form-group {
+                /* Garante que o label e o input usem 100% da largura em campos longos */
+                display: block; 
+                margin-bottom: 10px;
+            }
+            .form-group label {
+                flex-basis: auto; /* Remove a largura fixa do label */
+                margin-bottom: 5px;
+            }
+            .button-container { 
+                flex-direction: column; 
+                gap: 10px; 
+            }
+            .button-container a, .button-container button { 
+                max-width: 100%; 
+            }
         }
     </style>
 </head>
@@ -382,24 +423,26 @@
 
 
         <h2 style="margin-top: 50px;">ANEXO I – ESCALA DE HORÁRIOS E DISPONIBILIDADE</h2>
-        <table class="anexo-table">
-            <thead>
-                <tr>
-                    <th>Dia da Semana</th>
-                    <th>Início</th>
-                    <th>Fim</th>
-                    <th>Observações (Ex: Administrativo, Online)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr><td>Segunda</td><td><input type="text" placeholder="08:00"></td><td><input type="text" placeholder="12:00"></td><td><input type="text" placeholder="-"></td></tr>
-                <tr><td>Terça</td><td><input type="text" placeholder="14:00"></td><td><input type="text" placeholder="18:00"></td><td><input type="text" placeholder="-"></td></tr>
-                <tr><td>Quarta</td><td><input type="text" placeholder="08:00"></td><td><input type="text" placeholder="12:00"></td><td><input type="text" placeholder="-"></td></tr>
-                <tr><td>Quinta</td><td><input type="text" placeholder="14:00"></td><td><input type="text" placeholder="18:00"></td><td><input type="text" placeholder="-"></td></tr>
-                <tr><td>Sexta</td><td><input type="text" placeholder="08:00"></td><td><input type="text" placeholder="12:00"></td><td><input type="text" placeholder="-"></td></tr>
-                <tr><td>Sábado</td><td><input type="text" placeholder="-"></td><td><input type="text" placeholder="-"></td><td><input type="text" placeholder="-"></td></tr>
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="anexo-table">
+                <thead>
+                    <tr>
+                        <th>Dia da Semana</th>
+                        <th>Início</th>
+                        <th>Fim</th>
+                        <th>Observações (Ex: Administrativo, Online)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Segunda</td><td><input type="text" placeholder="08:00"></td><td><input type="text" placeholder="12:00"></td><td><input type="text" placeholder="-"></td></tr>
+                    <tr><td>Terça</td><td><input type="text" placeholder="14:00"></td><td><input type="text" placeholder="18:00"></td><td><input type="text" placeholder="-"></td></tr>
+                    <tr><td>Quarta</td><td><input type="text" placeholder="08:00"></td><td><input type="text" placeholder="12:00"></td><td><input type="text" placeholder="-"></td></tr>
+                    <tr><td>Quinta</td><td><input type="text" placeholder="14:00"></td><td><input type="text" placeholder="18:00"></td><td><input type="text" placeholder="-"></td></tr>
+                    <tr><td>Sexta</td><td><input type="text" placeholder="08:00"></td><td><input type="text" placeholder="12:00"></td><td><input type="text" placeholder="-"></td></tr>
+                    <tr><td>Sábado</td><td><input type="text" placeholder="-"></td><td><input type="text" placeholder="-"></td><td><input type="text" placeholder="-"></td></tr>
+                </tbody>
+            </table>
+        </div>
 
     </div>
     
