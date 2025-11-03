@@ -37,7 +37,7 @@
         }
 
         .container {
-            max-width: 900px; /* Aumentado para melhor visualização da tabela */
+            max-width: 900px;
             margin: 0 auto;
             background-color: white;
             border-radius: 16px;
@@ -65,7 +65,6 @@
             overflow: hidden;
         }
         
-        /* Estilos base (omitidos para concisão, mas mantidos os essenciais) */
         h1 { font-size: 1.8rem; margin-bottom: 6px; font-weight: 700; }
         .subtitle { font-size: 1rem; opacity: 0.9; font-weight: 300; }
         .section { margin: 20px; padding: 20px; border-radius: 12px; background-color: white; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); border: 1px solid var(--border); }
@@ -115,11 +114,11 @@
         }
         
         .exercise-table input, .exercise-table select {
-            border: 1px solid transparent; /* Inicialmente transparente */
+            border: 1px solid transparent; 
             padding: 4px;
             margin: -4px;
             background-color: transparent;
-            width: calc(100% + 8px); /* Para preencher a célula */
+            width: calc(100% + 8px); 
             box-sizing: border-box;
         }
 
@@ -131,7 +130,7 @@
         
         .action-cell {
             text-align: center;
-            width: 40px; /* Largura para o botão de excluir */
+            width: 40px; 
         }
         
         .remove-btn {
@@ -149,7 +148,6 @@
             background-color: #c82333;
         }
 
-        /* Oculta os inputs e botões na impressão para uma tabela limpa */
         @media print {
             .exercise-controls, .remove-btn {
                 display: none !important;
@@ -167,7 +165,7 @@
         }
         /* --- FIM ESTILOS DA TABELA DE EXERCÍCIOS --- */
 
-        /* Estilos dos Botões (Mantidos e adaptados para o novo botão) */
+        /* Estilos dos Botões */
         .button-container {
             text-align: center;
             margin: 25px 0;
@@ -210,7 +208,7 @@
         }
 
         .add-exercise-btn {
-            background-color: #28a745; /* Verde para adicionar */
+            background-color: #28a745; 
             color: white;
             padding: 8px 15px;
             border-radius: 8px;
@@ -234,7 +232,7 @@
             }
             .exercise-table {
                 display: block;
-                overflow-x: auto; /* Permite scroll horizontal em tabelas grandes */
+                overflow-x: auto; 
                 white-space: nowrap;
             }
         }
@@ -334,9 +332,8 @@
     <div class="feedback" id="feedback-msg">Gerando PDF... Aguarde!</div>
 
     <script>
-        let counter = 1; // Contador para ID únicas
+        let counter = 1; 
 
-        // Função para adicionar uma nova linha de exercício
         function adicionarExercicio() {
             const list = document.getElementById('exercise-list');
             const newRowId = `row-${counter}`;
@@ -355,7 +352,6 @@
             counter++;
         }
 
-        // Função para remover uma linha de exercício
         function removerExercicio(rowId) {
             const row = document.getElementById(rowId);
             if (row) {
@@ -363,7 +359,7 @@
             }
         }
 
-        // --- Funções de Geração de PDF (Adaptadas) ---
+        // --- FUNÇÃO DE GERAÇÃO DE PDF CORRIGIDA ---
         window.jsPDF = window.jspdf.jsPDF;
 
         function gerarPDF() {
@@ -376,7 +372,6 @@
             html2canvas(ficha, {
                 scale: 2, 
                 useCORS: true,
-                // Ignora o botão de adicionar exercícios ao tirar a foto
                 ignoreElements: (element) => element.classList.contains('exercise-controls') || element.classList.contains('remove-btn')
             }).then(canvas => {
                 
@@ -384,17 +379,20 @@
                 const imgData = canvas.toDataURL('image/png');
                 const pdf = new jsPDF('p', 'mm', 'a4'); 
                 
-                const imgWidth = 210;
-                const pageHeight = 297;
+                const imgWidth = 210; // Largura A4 em mm
+                const pageHeight = 297; // Altura A4 em mm
                 const imgHeight = canvas.height * imgWidth / canvas.width;
                 let heightLeft = imgHeight;
                 let position = 0;
                 
+                // 1. Adiciona a primeira página
                 pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
                 heightLeft -= pageHeight;
                 
+                // 2. Itera para adicionar páginas se o conteúdo for maior que A4
                 while (heightLeft >= 0) {
-                    position = heightLeft - imgHeight;
+                    // CORREÇÃO: A posição agora é subtraída pelo pageHeight
+                    position = position - pageHeight;
                     pdf.addPage();
                     pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
                     heightLeft -= pageHeight;
@@ -410,8 +408,11 @@
             });
         }
         
-        // Inicialmente esconder o feedback
         document.addEventListener('DOMContentLoaded', function() {
+            // Garante que o botão de remover na linha de exemplo funcione
+            document.getElementById('row-0').querySelector('.remove-btn').onclick = function() {
+                removerExercicio('row-0');
+            };
             document.getElementById('feedback-msg').style.display = 'none';
         });
     </script>
