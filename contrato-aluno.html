@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contrato de Prestação de Serviços - Aluno Pilates</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Variáveis de Cor, baseadas no seu código de referência */
+        :root {
+            --primary: #9B5E62; /* Tom original do Studio */
+            --secondary: #4D4F50;
+            --accent: #000000;
+            --light-bg: #f8f9fa;
+            --dark-text: #333;
+            --border: #e0e0e0;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Times New Roman', Times, serif; 
+            line-height: 1.6;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            padding: 30px;
+        }
+
+        header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 3px double var(--primary);
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* Estilos de Contrato */
+        h2 {
+            font-size: 1.2rem;
+            color: var(--secondary);
+            margin-top: 25px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 5px;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+        }
+        
+        h3 {
+             font-size: 1.1rem;
+             color: var(--primary);
+             margin-top: 15px;
+        }
+
+        p, li {
+            font-size: 1.05rem;
+            margin-bottom: 10px;
+            text-align: justify;
+        }
+
+        ol, ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        /* Campos de Formulário para preenchimento */
+        .form-group, .form-row {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .form-full { display: block; margin-bottom: 15px; }
+        .form-full label { display: block; font-weight: bold; margin-bottom: 5px; }
+        
+        .form-group label {
+            flex-basis: 150px;
+            font-weight: bold;
+            font-size: 1rem;
+            color: var(--dark-text);
+        }
+
+        .input-fill {
+            flex-grow: 1;
+            padding: 5px 8px;
+            border: none;
+            border-bottom: 1px dashed var(--dark-text);
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 1.05rem;
+            background-color: var(--light-bg);
+            transition: all 0.2s;
+        }
+
+        .input-fill:focus {
+            background-color: white;
+            border-bottom: 1px solid var(--secondary);
+            outline: none;
+        }
+
+        /* Assinaturas */
+        .signatures {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px dashed var(--border);
+        }
+
+        .signature-box { width: 45%; text-align: center; }
+        .signature-line { border-top: 1px solid var(--dark-text); margin-bottom: 5px; height: 1px; }
+        .signature-info { font-size: 0.9rem; font-weight: bold; text-transform: uppercase; }
+
+        /* Tabela Anexo de Plano */
+        .anexo-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 1rem; }
+        .anexo-table th, .anexo-table td { border: 1px solid var(--border); padding: 8px; text-align: center; }
+        .anexo-table th { background-color: var(--secondary); color: white; }
+        .anexo-table input, .anexo-table select { border: none; padding: 4px; width: 100%; text-align: center; font-family: Arial, sans-serif; background-color: transparent; }
+        .anexo-table select { border-bottom: 1px dashed var(--dark-text); }
+
+
+        /* --- ESTILOS DE BOTÃO (COPIADO DO CÓDIGO DE REFERÊNCIA) --- */
+        
+        .button-container {
+            text-align: center;
+            margin: 25px 0;
+            padding: 0 20px;
+            display: flex; 
+            justify-content: center;
+            gap: 15px; 
+        }
+
+        /* Estilo comum para botões no container */
+        .button-container a, .button-container button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none; 
+            max-width: 280px;
+            width: 100%;
+        }
+
+        #btn-pdf {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 4px 15px rgba(155, 94, 98, 0.3);
+        }
+
+        .btn-voltar {
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Efeitos de Hover e Active */
+        #btn-pdf:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(155, 94, 98, 0.4);
+        }
+        .btn-voltar:hover {
+            transform: translateY(-3px);
+            background-color: #e9ecef;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            color: var(--primary);
+        }
+        
+        #btn-pdf:active, .btn-voltar:active {
+            transform: translateY(-1px);
+        }
+
+        #btn-pdf:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        /* --- FIM ESTILOS DE BOTÃO --- */
+
+        /* Estilos de Impressão */
+        @media print {
+            body { background: none; padding: 0; }
+            .container { box-shadow: none; border: none; padding: 0; }
+            .button-container, .form-group label, .form-full label { display: none !important; }
+            .input-fill, .anexo-table input, .anexo-table select {
+                border-bottom: 1px solid black !important;
+                background-color: white !important;
+                padding: 0;
+                margin: 0;
+                font-size: 11pt; 
+            }
+            .anexo-table input, .anexo-table select { border: none !important; }
+            p, li, h1, h2, h3 { font-size: 12pt; }
+            .signatures { margin-top: 80px; }
+            .signature-info { font-size: 10pt; }
+            .identificacao-paragrafo { display: block; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container pdf-content" id="contrato-aluno-pilates">
+        
+        <header>
+            <h1>CONTRATO DE PRESTAÇÃO DE SERVIÇOS DE PILATES</h1>
+            <h2>Studio Mariana Marques Pilates</h2>
+        </header>
+
+        <div class="identificacao-paragrafo">
+            <p style="text-indent: 40px;">Pelo presente instrumento particular, de um lado, a **CONTRATADA** (Studio):</p>
+            
+            <div class="form-full">
+                <label>Studio/Razão Social:</label>
+                <input type="text" id="contratada_nome" class="input-fill" placeholder="Nome/Razão Social do Studio">
+            </div>
+            <div class="form-row">
+                <div class="form-group" style="flex: 1;">
+                    <label>CNPJ:</label>
+                    <input type="text" id="contratada_cnpj" class="input-fill" placeholder="CNPJ do Studio">
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label>Endereço:</label>
+                    <input type="text" id="contratada_end" class="input-fill" placeholder="Endereço do Studio">
+                </div>
+            </div>
+            
+            <p>E de outro lado, o **CONTRATANTE** (Aluno):</p>
+
+             <div class="form-full">
+                <label>Nome Completo do Aluno:</label>
+                <input type="text" id="contratante_nome" class="input-fill" placeholder="Nome completo do aluno(a)">
+            </div>
+            <div class="form-row">
+                <div class="form-group" style="flex: 1;">
+                    <label>CPF:</label>
+                    <input type="text" id="contratante_cpf" class="input-fill" placeholder="CPF do Aluno">
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label>Telefone:</label>
+                    <input type="text" id="contratante_tel" class="input-fill" placeholder="Telefone de contato">
+                </div>
+            </div>
+            <div class="form-full">
+                <label>Endereço Residencial:</label>
+                <input type="text" id="contratante_end" class="input-fill" placeholder="Endereço completo do Aluno">
+            </div>
+            
+            <p style="margin-top: 30px;">As partes acima identificadas celebram o presente contrato, regido pelas seguintes cláusulas:</p>
+        </div>
+
+        <hr style="margin: 20px 0;">
+
+        <h2>CLÁUSULA PRIMEIRA - DO OBJETO E DURAÇÃO</h2>
+        <p>1.1. **Objeto:** O presente contrato tem por objeto a prestação de serviços de aulas do Método Pilates (equipamentos e/ou solo) pela **CONTRATADA** ao **CONTRATANTE**, conforme o Plano de Aulas contratado (Cláusula Terceira).</p>
+        <div class="form-group">
+            <p>1.2. **Vigência do Plano:** O plano tem início em</p>
+            <input type="date" id="data_inicio_plano" class="input-fill" style="width: 150px; margin: 0 5px;">
+            <p>e duração de</p>
+            <input type="text" id="duracao_plano" class="input-fill" style="width: 60px; margin: 0 5px;" placeholder="Ex: 12">
+            <p>meses.</p>
+        </div>
+        <p>1.3. As aulas serão realizadas em grupos de no máximo [**MÁXIMO DE ALUNOS**] alunos por horário e terão duração de [**DURAÇÃO DA AULA**] minutos.</p>
+
+        <h2>CLÁUSULA SEGUNDA - DAS REGRAS DE FREQUÊNCIA E REPOSIÇÃO</h2>
+        
+        <p>2.1. **Pontualidade:** É de responsabilidade do **CONTRATANTE** a pontualidade. Em caso de atraso superior a **[TOLERÂNCIA EM MINUTOS]** minutos, a **CONTRATADA** reserva-se o direito de não permitir a entrada na aula, a fim de não prejudicar os demais alunos e o desenvolvimento da sessão, sendo a aula considerada como ministrada.</p>
+
+        <h3>2.2. Faltas e Reposição:</h3>
+        <ol type="a">
+            <li>**Aviso Prévio:** Para ter direito à reposição, a aula deve ser desmarcada com antecedência mínima de **[HORAS DE ANTECEDÊNCIA]** horas (via WhatsApp, App ou pessoalmente).</li>
+            <li>**Falta Injustificada:** A falta sem o aviso prévio mínimo será considerada aula ministrada, sem direito a reposição.</li>
+            <li>**Período de Reposição:** As reposições deverão ser realizadas dentro do prazo de **[DIAS OU PERÍODO]** dias a partir da falta, conforme disponibilidade de horários da **CONTRATADA**.</li>
+            <li>**Feriados:** Aulas que coincidirem com feriados nacionais, estaduais ou municipais [**NÃO DARÃO** / **DARÃO**] direito à reposição.</li>
+            <li>**Intransferibilidade:** As aulas são pessoais e intransferíveis, não podendo ser utilizadas por terceiros.</li>
+        </ol>
+
+        <h2>CLÁUSULA TERCEIRA - DO PLANO E PAGAMENTO</h2>
+        
+        <p>3.1. O **CONTRATANTE** adere ao seguinte plano de aulas:</p>
+        <table class="anexo-table">
+            <thead>
+                <tr>
+                    <th style="width: 20%;">Plano</th>
+                    <th style="width: 20%;">Frequência Semanal</th>
+                    <th style="width: 25%;">Valor Mensal (R$)</th>
+                    <th style="width: 35%;">Forma de Pagamento</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><select><option>Mensal</option><option>Trimestral</option><option>Semestral</option><option>Anual</option></select></td>
+                    <td><input type="text" placeholder="Ex: 2x, 3x"></td>
+                    <td><input type="text" placeholder="Ex: 350,00"></td>
+                    <td><input type="text" placeholder="Ex: Recorrência Cartão, Boleto, PIX"></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="form-group" style="margin-top: 20px;">
+            <p>3.2. O vencimento da mensalidade ocorre no dia</p>
+            <input type="number" id="dia_vencimento" class="input-fill" style="width: 50px; margin: 0 5px;" placeholder="Dia">
+            <p>º (dia) de cada mês.</p>
+        </div>
+        <p>3.3. **Reajuste:** O valor do plano será reajustado anualmente com base no índice oficial **[ÍNDICE DE REAJUSTE, ex: IGPM ou IPCA]**.</p>
+        <p>3.4. **Inadimplência:** O atraso no pagamento superior a **[Nº DE DIAS]** dias suspenderá o acesso às aulas até a regularização, podendo incidir multa de **[MULTA]%** e juros de mora.</p>
+
+        <h2>CLÁUSULA QUARTA - DA RESCISÃO E SUSPENSÃO</h2>
+        <p>4.1. **Cancelamento/Rescisão (Plano Mensal):** A desistência deverá ser comunicada por escrito com antecedência mínima de **[DIAS DE AVISO]** dias. Planos mensais cancelados não geram estorno de valores.</p>
+        <p>4.2. **Rescisão (Planos com Fidelidade):** Em caso de rescisão antecipada de planos trimestrais, semestrais ou anuais, será cobrada uma multa equivalente a **[MULTA DE FIDELIDADE]%** sobre o valor restante a vencer do contrato, sendo o saldo remanescente (se houver) estornado ao **CONTRATANTE**.</p>
+        <p>4.3. **Suspensão Voluntária (Trancamento):** O **CONTRATANTE** tem direito a suspender o plano por até **[DIAS MÁXIMOS DE SUSPENSÃO]** dias a cada [**PERÍODO DO PLANO**], mediante aviso prévio e justificativa formal.</p>
+        
+        <h2>CLÁUSULA QUINTA - DISPOSIÇÕES GERAIS</h2>
+        <p>5.1. **Saúde:** O **CONTRATANTE** declara estar apto para a prática de atividades físicas, isentando a **CONTRATADA** de responsabilidade por problemas de saúde preexistentes não informados.</p>
+        <p>5.2. **Uso de Imagem:** O **CONTRATANTE** [**AUTORIZA** / **NÃO AUTORIZA**] o uso de sua imagem (fotos e vídeos feitos no Studio) pela **CONTRATADA** para fins de marketing e divulgação institucional.</p>
+        <div class="form-group">
+            <p>5.3. **Foro:** As partes elegem o foro da Comarca de</p>
+            <input type="text" id="foro_cidade" class="input-fill" style="width: 150px; margin: 0 5px;" placeholder="Cidade">
+            <p>, Estado de</p>
+            <input type="text" id="foro_estado" class="input-fill" style="width: 50px; margin: 0 5px;" placeholder="UF">
+            <p>.</p>
+        </div>
+        
+        <div class="signatures">
+            <div class="signature-box">
+                <div class="signature-line"></div>
+                <p class="signature-info" id="assinatura_contratada"></p>
+                <p class="signature-info">CONTRATADA (Studio)</p>
+            </div>
+            <div class="signature-box">
+                <div class="signature-line"></div>
+                <p class="signature-info" id="assinatura_contratante"></p>
+                <p class="signature-info">CONTRATANTE (Aluno)</p>
+            </div>
+        </div>
+        
+        <p style="margin-top: 50px; text-align: right;">[<span id="local_data_final">Local, Data</span>]</p>
+
+
+    </div>
+    
+    <div class="button-container">
+        <a href="index.html" class="btn-voltar">
+             <i class="fas fa-arrow-left"></i> Voltar para Início
+        </a>
+        
+        <button id="btn-pdf" onclick="gerarPDF()">
+            <i class="fas fa-file-pdf"></i> Gerar e Baixar Contrato PDF
+        </button>
+    </div>
+    
+    <div class="feedback" id="feedback-msg" style="display: none;">Gerando PDF... Aguarde!</div>
+
+    <script>
+        window.jsPDF = window.jspdf.jsPDF;
+
+        // Função para atualizar as assinaturas e a data/local final
+        function updateContractInfo() {
+            // Assinaturas
+            document.getElementById('assinatura_contratada').textContent = document.getElementById('contratada_nome').value.toUpperCase() || 'NOME DO STUDIO/EMPRESA';
+            document.getElementById('assinatura_contratante').textContent = document.getElementById('contratante_nome').value.toUpperCase() || 'NOME COMPLETO DO ALUNO';
+            
+            // Local e Data Final
+            const foroCidade = document.getElementById('foro_cidade').value || 'CIDADE';
+            const dataAtual = new Date().toLocaleDateString('pt-BR'); 
+            document.getElementById('local_data_final').textContent = `${foroCidade}, ${dataAtual}.`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Atualiza o contrato sempre que um campo relevante muda
+            const fieldsToMonitor = ['contratada_nome', 'contratante_nome', 'foro_cidade'];
+            fieldsToMonitor.forEach(id => {
+                document.getElementById(id).addEventListener('input', updateContractInfo);
+            });
+            
+            updateContractInfo(); 
+             document.getElementById('feedback-msg').style.display = 'none';
+        });
+
+
+        // --- Função de Geração de PDF (Reutilizada) ---
+        function gerarPDF() {
+            const contrato = document.getElementById('contrato-aluno-pilates');
+            const feedbackMsg = document.getElementById('feedback-msg');
+            
+            updateContractInfo(); 
+            
+            feedbackMsg.style.display = 'block';
+            document.getElementById('btn-pdf').disabled = true;
+
+            html2canvas(contrato, {
+                scale: 2, 
+                useCORS: true,
+            }).then(canvas => {
+                
+                const { jsPDF } = window.jspdf;
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('p', 'mm', 'a4'); 
+                
+                const imgWidth = 210;
+                const pageHeight = 297;
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+                let heightLeft = imgHeight;
+                let position = 0;
+                
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+                
+                while (heightLeft >= 0) {
+                    position = heightLeft - pageHeight; 
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+                
+                const nomeAluno = document.getElementById('contratante_nome').value.trim() || 'Aluno';
+                pdf.save(`Contrato_Aluno_${nomeAluno.replace(/\s/g, '_')}.pdf`);
+
+                feedbackMsg.style.display = 'none';
+                document.getElementById('btn-pdf').disabled = false;
+            });
+        }
+    </script>
+</body>
+</html>

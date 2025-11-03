@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DISTRATO DE CONTRATO - Pilates</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Variáveis de Cor, baseadas no seu código de referência */
+        :root {
+            --primary: #9B5E62; /* Tom original do Studio */
+            --secondary: #4D4F50;
+            --accent: #000000;
+            --light-bg: #f8f9fa;
+            --dark-text: #333;
+            --border: #e0e0e0;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Times New Roman', Times, serif; 
+            line-height: 1.6;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            padding: 30px;
+        }
+
+        header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 3px double var(--primary);
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* Estilos de Contrato */
+        h2 {
+            font-size: 1.2rem;
+            color: var(--secondary);
+            margin-top: 25px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 5px;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+        }
+        
+        h3 {
+             font-size: 1.1rem;
+             color: var(--primary);
+             margin-top: 15px;
+        }
+
+        p, li {
+            font-size: 1.05rem;
+            margin-bottom: 10px;
+            text-align: justify;
+        }
+
+        ol, ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        /* Campos de Formulário para preenchimento */
+        .form-group, .form-row {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .form-full { display: block; margin-bottom: 15px; }
+        .form-full label { display: block; font-weight: bold; margin-bottom: 5px; }
+        
+        .form-group label {
+            flex-basis: 150px;
+            font-weight: bold;
+            font-size: 1rem;
+            color: var(--dark-text);
+        }
+
+        .input-fill {
+            flex-grow: 1;
+            padding: 5px 8px;
+            border: none;
+            border-bottom: 1px dashed var(--dark-text);
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 1.05rem;
+            background-color: var(--light-bg);
+            transition: all 0.2s;
+        }
+
+        .input-fill:focus {
+            background-color: white;
+            border-bottom: 1px solid var(--secondary);
+            outline: none;
+        }
+        
+        /* Tabela de Acertos Financeiros */
+        .acertos-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        .acertos-table th, .acertos-table td {
+            border: 1px solid var(--border);
+            padding: 8px;
+            text-align: left;
+        }
+        .acertos-table th {
+            background-color: var(--secondary);
+            color: white;
+            text-align: center;
+        }
+        .acertos-table td input {
+            border: none;
+            width: 100%;
+            padding: 0;
+            background-color: transparent;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Assinaturas */
+        .signatures {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px dashed var(--border);
+        }
+
+        .signature-box { width: 45%; text-align: center; }
+        .signature-line { border-top: 1px solid var(--dark-text); margin-bottom: 5px; height: 1px; }
+        .signature-info { font-size: 0.9rem; font-weight: bold; text-transform: uppercase; }
+
+
+        /* --- ESTILOS DE BOTÃO (COPIADO DO CÓDIGO DE REFERÊNCIA) --- */
+        
+        .button-container {
+            text-align: center;
+            margin: 25px 0;
+            padding: 0 20px;
+            display: flex; 
+            justify-content: center;
+            gap: 15px; 
+        }
+
+        /* Estilo comum para botões no container */
+        .button-container a, .button-container button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none; 
+            max-width: 280px;
+            width: 100%;
+        }
+
+        #btn-pdf {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 4px 15px rgba(155, 94, 98, 0.3);
+        }
+
+        .btn-voltar {
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Efeitos de Hover e Active */
+        #btn-pdf:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(155, 94, 98, 0.4);
+        }
+        .btn-voltar:hover {
+            transform: translateY(-3px);
+            background-color: #e9ecef;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            color: var(--primary);
+        }
+        
+        #btn-pdf:active, .btn-voltar:active {
+            transform: translateY(-1px);
+        }
+
+        #btn-pdf:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        /* --- FIM ESTILOS DE BOTÃO --- */
+
+        /* Estilos de Impressão */
+        @media print {
+            body { background: none; padding: 0; }
+            .container { box-shadow: none; border: none; padding: 0; }
+            .button-container, .form-group label, .form-full label { display: none !important; }
+            .input-fill, .acertos-table input {
+                border-bottom: 1px solid black !important;
+                background-color: white !important;
+                padding: 0;
+                margin: 0;
+                font-size: 11pt; 
+            }
+            .acertos-table input { border: none !important; }
+            p, li, h1, h2, h3 { font-size: 12pt; }
+            .signatures { margin-top: 80px; }
+            .signature-info { font-size: 10pt; }
+            .identificacao-paragrafo { display: block; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container pdf-content" id="contrato-distrato">
+        
+        <header>
+            <h1>DISTRATO DE CONTRATO DE PRESTAÇÃO DE SERVIÇOS</h1>
+            <h2>ENCERRAMENTO DE ACORDO DE AULAS DE PILATES</h2>
+        </header>
+
+        <div class="identificacao-paragrafo">
+            <p style="text-indent: 40px;">Pelo presente instrumento particular de Distrato, de um lado, o **Studio/CONTRATADA** e de outro lado, o **Aluno(a)/CONTRATANTE**, conforme dados abaixo, acordam o encerramento do Contrato de Prestação de Serviços de Pilates nº</p>
+            <div class="form-group">
+                <input type="text" id="num_contrato_original" class="input-fill" style="width: 100px; margin: 0 5px;" placeholder="Nº Contrato">
+                <p>firmado em</p>
+                <input type="date" id="data_contrato_original" class="input-fill" style="width: 150px; margin: 0 5px;">
+                <p>sob as cláusulas e condições a seguir estipuladas:</p>
+            </div>
+            
+            <h3 style="margin-top: 30px;">DADOS DAS PARTES</h3>
+
+             <div class="form-row">
+                <div class="form-group" style="flex: 1;">
+                    <label>Aluno(a):</label>
+                    <input type="text" id="aluno_nome" class="input-fill" placeholder="Nome Completo do Aluno">
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label>CPF:</label>
+                    <input type="text" id="aluno_cpf" class="input-fill" placeholder="CPF do Aluno">
+                </div>
+            </div>
+            <div class="form-full">
+                <label>Studio/Contratada:</label>
+                <input type="text" id="studio_nome" class="input-fill" placeholder="Nome/Razão Social do Studio">
+            </div>
+            
+        </div>
+
+        <hr style="margin: 20px 0;">
+
+        <h2>CLÁUSULA PRIMEIRA - DO OBJETO DO DISTRATO</h2>
+        <p>1.1. O presente instrumento tem como objeto a rescisão do Contrato de Prestação de Serviços de Pilates (referido acima) a partir da data de</p>
+        <div class="form-group">
+            <input type="date" id="data_efetiva_distrato" class="input-fill" style="width: 150px; margin: 0 5px;">
+            <p>.</p>
+        </div>
+        <p>1.2. O motivo da rescisão é:</p>
+        <div class="form-full">
+            <textarea id="motivo_rescisao" class="input-fill" rows="2" placeholder="Ex: Mudança de cidade por parte do aluno, decisão mútua, etc."></textarea>
+        </div>
+
+        <h2>CLÁUSULA SEGUNDA - DA EXECUÇÃO E OBRIGAÇÕES PENDENTES</h2>
+        <p>2.1. O **Studio/CONTRATADA** declara ter prestado os serviços e o **Aluno(a)/CONTRATANTE** declara ter usufruído das aulas até a data definida na Cláusula 1.1.</p>
+        <p>2.2. A partir da data do distrato, todas as obrigações e responsabilidades do Contrato Original serão extintas, **salvo as obrigações financeiras** definidas na Cláusula Terceira.</p>
+
+        <h2>CLÁUSULA TERCEIRA - DOS ACERTOS FINANCEIROS E QUITAÇÃO</h2>
+        
+        <h3>3.1. Resumo dos Acertos:</h3>
+        <table class="acertos-table">
+            <thead>
+                <tr>
+                    <th style="width: 30%;">Item</th>
+                    <th style="width: 30%;">Valor (R$)</th>
+                    <th style="width: 40%;">Observação</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Valor Total Pago Antecipadamente pelo Aluno</td>
+                    <td><input type="text" placeholder="R$"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Valor dos Serviços Já Prestados/Aulas Utilizadas</td>
+                    <td><input type="text" placeholder="R$"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Multa Contratual (Se aplicável, conforme Cláusula X do contrato original)</td>
+                    <td><input type="text" placeholder="R$"></td>
+                    <td><input type="text" placeholder="Ex: 10% sobre os meses restantes."></td>
+                </tr>
+                <tr>
+                    <td>**SALDO FINAL A SER DEVOLVIDO AO ALUNO**</td>
+                    <td><input type="text" placeholder="R$"></td>
+                    <td>**Este valor será devolvido ao aluno.**</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="form-group" style="margin-top: 20px;">
+            <p>3.2. O valor de quitação (R$</p>
+            <input type="text" id="valor_quitacao" class="input-fill" style="width: 100px; margin: 0 5px;" placeholder="Valor">
+            <p>) será pago ao Aluno(a) em</p>
+            <input type="text" id="prazo_devolucao" class="input-fill" style="width: 100px; margin: 0 5px;" placeholder="Ex: 7 dias úteis">
+            <p>dias, através de [**FORMA DE PAGAMENTO**].</p>
+        </div>
+        <p>3.3. As partes dão, mutuamente, plena e total quitação em relação ao contrato distratado, para nada mais reclamarem a qualquer título, a partir da assinatura deste instrumento.</p>
+
+        <h2>CLÁUSULA QUARTA - DISPOSIÇÕES FINAIS</h2>
+        <p>4.1. Este Distrato é firmado em caráter irrevogável e irretratável. Eventuais pendências não resolvidas serão tratadas no foro da Comarca de</p>
+         <div class="form-group">
+            <input type="text" id="foro_cidade" class="input-fill" style="width: 150px; margin: 0 5px;" placeholder="Cidade">
+            <p>, Estado de</p>
+            <input type="text" id="foro_estado" class="input-fill" style="width: 50px; margin: 0 5px;" placeholder="UF">
+            <p>.</p>
+        </div>
+        
+        <div class="signatures">
+            <div class="signature-box">
+                <div class="signature-line"></div>
+                <p class="signature-info" id="assinatura_contratada"></p>
+                <p class="signature-info">CONTRATADA (Studio)</p>
+            </div>
+            <div class="signature-box">
+                <div class="signature-line"></div>
+                <p class="signature-info" id="assinatura_contratante"></p>
+                <p class="signature-info">CONTRATANTE (Aluno)</p>
+            </div>
+        </div>
+        
+        <p style="margin-top: 50px; text-align: right;">[<span id="local_data_final">Local, Data</span>]</p>
+
+    </div>
+    
+    <div class="button-container">
+        <a href="index.html" class="btn-voltar">
+             <i class="fas fa-arrow-left"></i> Voltar para Início
+        </a>
+        
+        <button id="btn-pdf" onclick="gerarPDF()">
+            <i class="fas fa-file-pdf"></i> Gerar e Baixar Distrato PDF
+        </button>
+    </div>
+    
+    <div class="feedback" id="feedback-msg" style="display: none;">Gerando PDF... Aguarde!</div>
+
+    <script>
+        window.jsPDF = window.jspdf.jsPDF;
+
+        // Função para atualizar as assinaturas e a data/local final
+        function updateContractInfo() {
+            // Assinaturas
+            document.getElementById('assinatura_contratada').textContent = document.getElementById('studio_nome').value.toUpperCase() || 'NOME DO STUDIO/EMPRESA';
+            document.getElementById('assinatura_contratante').textContent = document.getElementById('aluno_nome').value.toUpperCase() || 'NOME COMPLETO DO ALUNO';
+            
+            // Local e Data Final
+            const foroCidade = document.getElementById('foro_cidade').value || 'CIDADE';
+            const dataAtual = new Date().toLocaleDateString('pt-BR'); 
+            document.getElementById('local_data_final').textContent = `${foroCidade}, ${dataAtual}.`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Atualiza o contrato sempre que um campo relevante muda
+            const fieldsToMonitor = ['studio_nome', 'aluno_nome', 'foro_cidade'];
+            fieldsToMonitor.forEach(id => {
+                document.getElementById(id).addEventListener('input', updateContractInfo);
+            });
+            
+            updateContractInfo(); 
+             document.getElementById('feedback-msg').style.display = 'none';
+        });
+
+
+        // --- Função de Geração de PDF (Reutilizada) ---
+        function gerarPDF() {
+            const contrato = document.getElementById('contrato-distrato');
+            const feedbackMsg = document.getElementById('feedback-msg');
+            
+            updateContractInfo(); 
+            
+            feedbackMsg.style.display = 'block';
+            document.getElementById('btn-pdf').disabled = true;
+
+            html2canvas(contrato, {
+                scale: 2, 
+                useCORS: true,
+            }).then(canvas => {
+                
+                const { jsPDF } = window.jspdf;
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('p', 'mm', 'a4'); 
+                
+                const imgWidth = 210;
+                const pageHeight = 297;
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+                let heightLeft = imgHeight;
+                let position = 0;
+                
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+                
+                while (heightLeft >= 0) {
+                    position = heightLeft - pageHeight; 
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+                
+                const nomeAluno = document.getElementById('aluno_nome').value.trim() || 'Aluno';
+                pdf.save(`Distrato_Contrato_${nomeAluno.replace(/\s/g, '_')}.pdf`);
+
+                feedbackMsg.style.display = 'none';
+                document.getElementById('btn-pdf').disabled = false;
+            });
+        }
+    </script>
+</body>
+</html>

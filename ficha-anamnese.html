@@ -229,13 +229,15 @@
             margin-top: 5px;
         }
 
+        /* --- ESTILOS DOS BOTÕES (Alterado para incluir Voltar) --- */
         .button-container {
             text-align: center;
             margin: 25px 0;
             padding: 0 20px;
-            display: flex; /* Adiciona flexbox para alinhar botões */
+            /* Adicionado Flexbox para alinhar e espaçar os botões */
+            display: flex; 
             justify-content: center;
-            gap: 15px; /* Espaço entre os botões */
+            gap: 15px; 
         }
 
         /* Estilo comum para botões no container */
@@ -251,17 +253,18 @@
             font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
-            text-decoration: none; /* Remove sublinhado do link */
+            text-decoration: none; /* Importante para o link Voltar */
             max-width: 280px;
             width: 100%;
         }
+
 
         #btn-pdf {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             box-shadow: 0 4px 15px rgba(155, 94, 98, 0.3);
         }
-
+        
         /* NOVO ESTILO PARA O BOTÃO VOLTAR */
         .btn-voltar {
             background-color: var(--light-bg);
@@ -269,19 +272,21 @@
             border: 1px solid var(--border);
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
+        /* FIM NOVO ESTILO */
 
         /* Efeitos de Hover e Active */
         #btn-pdf:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(155, 94, 98, 0.4);
         }
+        
         .btn-voltar:hover {
             transform: translateY(-3px);
             background-color: #e9ecef;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             color: var(--primary);
         }
-        
+
         #btn-pdf:active, .btn-voltar:active {
             transform: translateY(-1px);
         }
@@ -291,6 +296,7 @@
             cursor: not-allowed;
             transform: none;
         }
+        /* --- FIM ESTILOS DOS BOTÕES --- */
 
         .feedback {
             text-align: center;
@@ -336,7 +342,7 @@
             .container {
                 max-width: 95%;
             }
-            
+
             /* Empilha os botões em telas pequenas */
             .button-container {
                 flex-direction: column;
@@ -347,12 +353,10 @@
             }
         }
 
-        /* Efeitos de foco personalizados */
         .form-group:focus-within label {
             color: var(--primary);
         }
 
-        /* Estilo para campos condicionais */
         .conditional-field {
             margin-top: 8px;
             padding-left: 15px;
@@ -504,7 +508,7 @@
     
     <div class="button-container">
         <a href="index.html" class="btn-voltar">
-             <i class="fas fa-arrow-left"></i> Voltar para Início
+            <i class="fas fa-arrow-left"></i> Voltar para Início
         </a>
         
         <button id="btn-pdf" onclick="gerarPDF()">
@@ -522,34 +526,27 @@
             const ficha = document.getElementById('ficha-anamnese');
             const feedbackMsg = document.getElementById('feedback-msg');
             
-            // 1. Mostrar feedback para o usuário
             feedbackMsg.style.display = 'block';
             document.getElementById('btn-pdf').disabled = true;
 
-            // 2. Usar html2canvas para converter o HTML em uma imagem (canvas)
             html2canvas(ficha, {
-                scale: 2, // Aumenta a resolução para melhor qualidade no PDF
-                useCORS: true // Necessário se houver imagens externas
+                scale: 2, 
+                useCORS: true 
             }).then(canvas => {
                 
-                // 3. Inicializar o jsPDF
                 const { jsPDF } = window.jspdf;
                 const imgData = canvas.toDataURL('image/png');
-                const pdf = new jsPDF('p', 'mm', 'a4'); // 'p'=retrato, 'mm'=milímetros, 'a4'=tamanho
+                const pdf = new jsPDF('p', 'mm', 'a4'); 
                 
-                const imgWidth = 210; // Largura A4 em mm
-                const pageHeight = 297; // Altura A4 em mm
+                const imgWidth = 210;
+                const pageHeight = 297;
                 const imgHeight = canvas.height * imgWidth / canvas.width;
                 let heightLeft = imgHeight;
                 let position = 0;
                 
-                // 4. Adicionar a Imagem ao PDF (Tratando múltiplas páginas)
-                
-                // Primeira página
                 pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
                 heightLeft -= pageHeight;
                 
-                // Páginas adicionais, se o conteúdo for maior que uma A4
                 while (heightLeft >= 0) {
                     position = heightLeft - imgHeight;
                     pdf.addPage();
@@ -557,22 +554,19 @@
                     heightLeft -= pageHeight;
                 }
                 
-                // 5. Baixar o arquivo PDF
                 const nomeAluno = document.getElementById('nome').value.trim() || 'Aluno';
                 pdf.save(`Anamnese_${nomeAluno.replace(/\s/g, '_')}.pdf`);
 
-                // 6. Limpar o formulário
+                // Ação após gerar PDF
                 limparFormulario();
-
-                // 7. Resetar o feedback
                 feedbackMsg.style.display = 'none';
                 document.getElementById('btn-pdf').disabled = false;
             });
         }
 
-        // Função para limpar todo o formulário
+        // Função para limpar todo o formulário (mantida)
         function limparFormulario() {
-            // Limpar campos de texto
+            // ... (código da função limparFormulario)
             document.getElementById('nome').value = '';
             document.getElementById('profissao').value = '';
             document.getElementById('contato').value = '';
@@ -584,32 +578,22 @@
             document.getElementById('agua').value = '';
             document.getElementById('atividadeFisica').value = '';
             document.getElementById('observacoes').value = '';
-            
-            // Limpar data
             document.getElementById('dataNascimento').value = '';
             
-            // Limpar radio buttons da escala EVA
             const radiosEva = document.querySelectorAll('input[name="eva"]');
-            radiosEva.forEach(radio => {
-                radio.checked = false;
-            });
+            radiosEva.forEach(radio => { radio.checked = false; });
             
-            // Limpar checkboxes de objetivos
             const checkboxesObjetivos = document.querySelectorAll('input[name="objetivos"]');
-            checkboxesObjetivos.forEach(checkbox => {
-                checkbox.checked = false;
-            });
+            checkboxesObjetivos.forEach(checkbox => { checkbox.checked = false; });
             
-            // Resetar radio buttons de medicamentos e cirurgias
             document.querySelector('input[name="medicamentos"][value="nao"]').checked = true;
             document.querySelector('input[name="cirurgias"][value="nao"]').checked = true;
             
-            // Esconder campos condicionais
             document.getElementById('medicamentos-field').style.display = 'none';
             document.getElementById('cirurgias-field').style.display = 'none';
         }
 
-        // Mostrar/ocultar campos condicionais
+        // Mostrar/ocultar campos condicionais (mantida)
         document.addEventListener('DOMContentLoaded', function() {
             // Para medicamentos
             const medicamentosRadios = document.querySelectorAll('input[name="medicamentos"]');
@@ -617,11 +601,7 @@
             
             medicamentosRadios.forEach(radio => {
                 radio.addEventListener('change', function() {
-                    if (this.value === 'sim') {
-                        medicamentosField.style.display = 'block';
-                    } else {
-                        medicamentosField.style.display = 'none';
-                    }
+                    medicamentosField.style.display = this.value === 'sim' ? 'block' : 'none';
                 });
             });
             
@@ -631,15 +611,10 @@
             
             cirurgiasRadios.forEach(radio => {
                 radio.addEventListener('change', function() {
-                    if (this.value === 'sim') {
-                        cirurgiasField.style.display = 'block';
-                    } else {
-                        cirurgiasField.style.display = 'none';
-                    }
+                    cirurgiasField.style.display = this.value === 'sim' ? 'block' : 'none';
                 });
             });
             
-            // Inicialmente esconder o feedback
             document.getElementById('feedback-msg').style.display = 'none';
         });
     </script>

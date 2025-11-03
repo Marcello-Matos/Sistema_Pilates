@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabela de Evolução Diária de Exercícios - Pilates</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #9B5E62;
+            --secondary: #4D4F50;
+            --accent: #000000;
+            --light-bg: #f8f9fa;
+            --dark-text: #333;
+            --light-text: #6c757d;
+            --border: #e0e0e0;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            color: var(--dark-text);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px; /* Aumentado para melhor visualização da tabela */
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        header {
+            text-align: center;
+            padding: 25px 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Estilos base (omitidos para concisão, mas mantidos os essenciais) */
+        h1 { font-size: 1.8rem; margin-bottom: 6px; font-weight: 700; }
+        .subtitle { font-size: 1rem; opacity: 0.9; font-weight: 300; }
+        .section { margin: 20px; padding: 20px; border-radius: 12px; background-color: white; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); border: 1px solid var(--border); }
+        h2 { color: var(--primary); margin-bottom: 18px; padding-bottom: 8px; border-bottom: 2px solid var(--border); font-weight: 600; display: flex; align-items: center; font-size: 1.3rem; }
+        h2 i { margin-right: 10px; font-size: 1.3rem; }
+        .form-row { display: flex; gap: 15px; margin-bottom: 18px; }
+        .form-row .form-group { flex: 1; margin-bottom: 0; }
+        input[type="text"], input[type="number"], input[type="date"], textarea, select { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; }
+        input:focus, textarea:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(155, 94, 98, 0.1); }
+        .logo-container { text-align: center; padding: 20px 0 15px; background-color: white; border-bottom: 1px solid var(--border); }
+        .logo { max-width: 250px; height: auto; display: inline-block; vertical-align: middle; }
+
+
+        /* --- ESTILOS DA TABELA DE EXERCÍCIOS --- */
+
+        .exercise-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            gap: 10px;
+        }
+
+        .exercise-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .exercise-table th, .exercise-table td {
+            border: 1px solid var(--border);
+            padding: 8px;
+            text-align: left;
+            font-size: 0.9rem;
+            vertical-align: middle;
+        }
+
+        .exercise-table th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .exercise-table td {
+            background-color: var(--light-bg);
+        }
+        
+        .exercise-table input, .exercise-table select {
+            border: 1px solid transparent; /* Inicialmente transparente */
+            padding: 4px;
+            margin: -4px;
+            background-color: transparent;
+            width: calc(100% + 8px); /* Para preencher a célula */
+            box-sizing: border-box;
+        }
+
+        .exercise-table input:focus, .exercise-table select:focus {
+            border-color: var(--primary);
+            background-color: white;
+            box-shadow: none;
+        }
+        
+        .action-cell {
+            text-align: center;
+            width: 40px; /* Largura para o botão de excluir */
+        }
+        
+        .remove-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 8px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: background-color 0.2s;
+        }
+        
+        .remove-btn:hover {
+            background-color: #c82333;
+        }
+
+        /* Oculta os inputs e botões na impressão para uma tabela limpa */
+        @media print {
+            .exercise-controls, .remove-btn {
+                display: none !important;
+            }
+            .exercise-table td {
+                background-color: white !important;
+                border-color: #ccc !important;
+            }
+            .exercise-table input, .exercise-table select {
+                border: none !important;
+                padding: 0;
+                margin: 0;
+                width: 100%;
+            }
+        }
+        /* --- FIM ESTILOS DA TABELA DE EXERCÍCIOS --- */
+
+        /* Estilos dos Botões (Mantidos e adaptados para o novo botão) */
+        .button-container {
+            text-align: center;
+            margin: 25px 0;
+            padding: 0 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .button-container a, .button-container button, .add-exercise-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            max-width: 280px;
+            width: 100%;
+        }
+
+        #btn-pdf {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 4px 15px rgba(155, 94, 98, 0.3);
+        }
+
+        .btn-voltar {
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            max-width: 280px;
+            width: 100%;
+        }
+
+        .add-exercise-btn {
+            background-color: #28a745; /* Verde para adicionar */
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            max-width: 250px;
+            width: auto;
+        }
+
+        /* Adaptação para mobile */
+        @media (max-width: 768px) {
+            .button-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .button-container a, .button-container button {
+                max-width: 100%;
+            }
+            .exercise-table th, .exercise-table td {
+                padding: 6px;
+                font-size: 0.85rem;
+            }
+            .exercise-table {
+                display: block;
+                overflow-x: auto; /* Permite scroll horizontal em tabelas grandes */
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container pdf-content" id="ficha-evolucao-exercicios">
+        
+        <header>
+            <h1>Evolução Diária de Exercícios</h1>
+            <p class="subtitle">Registro detalhado da sessão de Pilates</p>
+        </header>
+
+        <div class="logo-container">
+            <img src="img/logo.png" alt="Logo do Studio" class="logo"> 
+        </div>
+        
+        <div class="section">
+            <h2><i class="fas fa-calendar-alt"></i> Dados da Aula</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="nome_aluno">Nome do Aluno(a)</label>
+                    <input type="text" id="nome_aluno" name="nome_aluno" placeholder="Nome do aluno(a)" required>
+                </div>
+                <div class="form-group" style="flex: 0.5;">
+                    <label for="data_aula">Data</label>
+                    <input type="date" id="data_aula" name="data_aula" required>
+                </div>
+                <div class="form-group" style="flex: 0.5;">
+                    <label for="instrutor">Instrutor(a)</label>
+                    <input type="text" id="instrutor" name="instrutor" placeholder="Seu nome">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="foco_principal">Foco Principal da Sessão</label>
+                <input type="text" id="foco_principal" name="foco_principal" placeholder="Ex: Estabilidade lombo-pélvica, Mobilidade torácica, Força de MMSS.">
+            </div>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-dumbbell"></i> Registro dos Exercícios</h2>
+            
+            <div class="exercise-controls">
+                <button type="button" class="add-exercise-btn" onclick="adicionarExercicio()">
+                    <i class="fas fa-plus"></i> Adicionar Exercício
+                </button>
+            </div>
+
+            <table class="exercise-table">
+                <thead>
+                    <tr>
+                        <th style="width: 15%;">Aparelho</th>
+                        <th style="width: 25%;">Exercício / Variação</th>
+                        <th style="width: 15%;">Molas / Carga</th>
+                        <th style="width: 15%;">Séries x Reps</th>
+                        <th style="width: 25%;">Desempenho / Observação</th>
+                        <th class="action-cell">Ação</th>
+                    </tr>
+                </thead>
+                <tbody id="exercise-list">
+                    <tr id="row-0">
+                        <td><input type="text" name="aparelho-0" placeholder="Ex: Reformer, Mat, Chair"></td>
+                        <td><input type="text" name="exercicio-0" placeholder="Ex: Hundred, Footwork, Short Spine"></td>
+                        <td><input type="text" name="molas-0" placeholder="Ex: 2 Vermelhas, 1 Azul"></td>
+                        <td><input type="text" name="reps-0" placeholder="Ex: 3x10, 5 resp."></td>
+                        <td><input type="text" name="desempenho-0" placeholder="Ex: Controle ótimo, Pouca mobilidade, Dor lombar"></td>
+                        <td class="action-cell"><button type="button" class="remove-btn" onclick="removerExercicio('row-0')"><i class="fas fa-trash"></i></button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-notes-medical"></i> Resumo e Plano de Ação</h2>
+            <div class="form-group">
+                <label for="observacoes_finais">Observações Gerais da Sessão / Feedback do Aluno</label>
+                <textarea id="observacoes_finais" name="observacoes_finais" rows="3" placeholder="Ex: Aluno motivado, melhor consciência do core, manter foco na mobilidade torácica."></textarea>
+            </div>
+            <div class="form-group">
+                <label for="proximo_foco">Foco para a Próxima Sessão</label>
+                <input type="text" id="proximo_foco" name="proximo_foco" placeholder="Ex: Introduzir Shoulder Bridge no Reformer, Reforçar Powerhouse.">
+            </div>
+        </div>
+    </div>
+    
+    <div class="button-container">
+        <a href="index.html" class="btn-voltar">
+             <i class="fas fa-arrow-left"></i> Voltar para Início
+        </a>
+        
+        <button id="btn-pdf" onclick="gerarPDF()">
+            <i class="fas fa-file-pdf"></i> Gerar e Baixar Evolução
+        </button>
+    </div>
+    
+    <div class="feedback" id="feedback-msg">Gerando PDF... Aguarde!</div>
+
+    <script>
+        let counter = 1; // Contador para ID únicas
+
+        // Função para adicionar uma nova linha de exercício
+        function adicionarExercicio() {
+            const list = document.getElementById('exercise-list');
+            const newRowId = `row-${counter}`;
+            
+            const newRow = document.createElement('tr');
+            newRow.id = newRowId;
+            newRow.innerHTML = `
+                <td><input type="text" name="aparelho-${counter}" placeholder="Ex: Reformer, Mat, Chair"></td>
+                <td><input type="text" name="exercicio-${counter}" placeholder="Ex: Hundred, Footwork, Short Spine"></td>
+                <td><input type="text" name="molas-${counter}" placeholder="Ex: 2 Vermelhas, 1 Azul"></td>
+                <td><input type="text" name="reps-${counter}" placeholder="Ex: 3x10, 5 resp."></td>
+                <td><input type="text" name="desempenho-${counter}" placeholder="Ex: Controle ótimo, Pouca mobilidade, Dor lombar"></td>
+                <td class="action-cell"><button type="button" class="remove-btn" onclick="removerExercicio('${newRowId}')"><i class="fas fa-trash"></i></button></td>
+            `;
+            list.appendChild(newRow);
+            counter++;
+        }
+
+        // Função para remover uma linha de exercício
+        function removerExercicio(rowId) {
+            const row = document.getElementById(rowId);
+            if (row) {
+                row.remove();
+            }
+        }
+
+        // --- Funções de Geração de PDF (Adaptadas) ---
+        window.jsPDF = window.jspdf.jsPDF;
+
+        function gerarPDF() {
+            const ficha = document.getElementById('ficha-evolucao-exercicios');
+            const feedbackMsg = document.getElementById('feedback-msg');
+            
+            feedbackMsg.style.display = 'block';
+            document.getElementById('btn-pdf').disabled = true;
+
+            html2canvas(ficha, {
+                scale: 2, 
+                useCORS: true,
+                // Ignora o botão de adicionar exercícios ao tirar a foto
+                ignoreElements: (element) => element.classList.contains('exercise-controls') || element.classList.contains('remove-btn')
+            }).then(canvas => {
+                
+                const { jsPDF } = window.jspdf;
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('p', 'mm', 'a4'); 
+                
+                const imgWidth = 210;
+                const pageHeight = 297;
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+                let heightLeft = imgHeight;
+                let position = 0;
+                
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+                
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+                
+                const nomeAluno = document.getElementById('nome_aluno').value.trim() || 'Aluno';
+                const dataAula = document.getElementById('data_aula').value || new Date().toISOString().slice(0, 10);
+
+                pdf.save(`EvolucaoDiaria_Exercicios_${nomeAluno.replace(/\s/g, '_')}_${dataAula.replace(/-/g, '')}.pdf`);
+
+                feedbackMsg.style.display = 'none';
+                document.getElementById('btn-pdf').disabled = false;
+            });
+        }
+        
+        // Inicialmente esconder o feedback
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('feedback-msg').style.display = 'none';
+        });
+    </script>
+</body>
+</html>

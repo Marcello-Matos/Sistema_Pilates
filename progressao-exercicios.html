@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ficha de Progressão de Exercícios - Studio Mariana Marques</title>
+    <title>Ficha de Progressão de Exercícios - Pilates</title>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
+        /* CSS BASE MANTIDO PARA CONSISTÊNCIA VISUAL */
         :root {
             --primary: #9B5E62;
             --secondary: #4D4F50;
@@ -37,8 +38,7 @@
         }
 
         .container {
-            /* Mantendo a largura ampla para o desktop */
-            max-width: 1000px; 
+            max-width: 900px; /* Levemente maior para a tabela de progressão */
             margin: 0 auto;
             background-color: white;
             border-radius: 16px;
@@ -66,17 +66,6 @@
             overflow: hidden;
         }
 
-        header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" opacity="0.1"><path d="M0 0h100v100H0z" fill="none"/><path d="M20 20h60v60H20z" stroke="white" stroke-width="2" fill="none"/></svg>');
-            background-size: 50px 50px;
-        }
-
         .logo-container {
             text-align: center;
             padding: 20px 0 15px;
@@ -91,139 +80,126 @@
             vertical-align: middle;
         }
 
-        h1 {
-            font-size: 1.8rem;
-            margin-bottom: 6px;
-            font-weight: 700;
-        }
-
-        .subtitle {
-            font-size: 1rem;
-            opacity: 0.9;
-            font-weight: 300;
-        }
-
-        .section {
-            margin: 20px;
-            padding: 20px;
-            border-radius: 12px;
-            background-color: white;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            border: 1px solid var(--border);
-            transition: var(--transition);
-        }
-
-        .section:hover {
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-        }
-
-        h2 {
-            color: var(--primary);
-            margin-bottom: 18px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid var(--border);
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            font-size: 1.3rem;
-        }
-
-        h2 i {
-            margin-right: 10px;
-            font-size: 1.3rem;
-        }
-
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 6px;
-            color: var(--dark-text);
-            font-size: 0.95rem;
-        }
-
-        input[type="text"], input[type="number"], input[type="date"], textarea, select {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 0.95rem;
-            transition: var(--transition);
-            background-color: white;
-        }
-
-        input:focus, textarea:focus, select:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(155, 94, 98, 0.1);
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 70px;
-        }
-
-        .form-row {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 18px;
-        }
-
-        .form-row .form-group {
-            flex: 1;
-            margin-bottom: 0;
-        }
-
-        /* --- Estilos da Tabela de Exercícios (Progressão) --- */
+        h1 { font-size: 1.8rem; margin-bottom: 6px; font-weight: 700; }
+        .subtitle { font-size: 1rem; opacity: 0.9; font-weight: 300; }
+        .section { margin: 20px; padding: 20px; border-radius: 12px; background-color: white; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); border: 1px solid var(--border); }
         
-        /* REMOVENDO CLASSE table-wrapper e min-width FIXO */
-        .exercise-table {
+        h2 { 
+            color: var(--primary); 
+            margin-bottom: 18px; 
+            padding-bottom: 8px; 
+            border-bottom: 2px solid var(--border); 
+            font-weight: 600; 
+            display: flex; 
+            align-items: center; 
+            font-size: 1.3rem; 
+        }
+        h2 i { margin-right: 10px; font-size: 1.3rem; }
+        
+        .form-row { display: flex; gap: 15px; margin-bottom: 18px; }
+        .form-row .form-group { flex: 1; margin-bottom: 0; }
+
+        input[type="text"], input[type="date"], textarea, select { 
+            width: 100%; 
+            padding: 10px 12px; 
+            border: 1px solid var(--border); 
+            border-radius: 8px; 
+            font-size: 0.95rem; 
+        }
+        textarea { resize: vertical; min-height: 70px; }
+
+        /* --- ESTILOS DA TABELA DE PROGRESSÃO --- */
+        .progression-controls {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 15px;
+        }
+        
+        .add-exercise-btn {
+            background-color: #28a745; 
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .add-exercise-btn:hover {
+            background-color: #218838;
+        }
+
+        .progression-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
-            /*table-layout: fixed; /* Desativado para mobile*/
+            margin-top: 10px;
         }
 
-        .exercise-table th, .exercise-table td {
+        .progression-table th, .progression-table td {
             border: 1px solid var(--border);
-            padding: 8px 10px;
+            padding: 8px;
             text-align: left;
             font-size: 0.9rem;
-            word-wrap: break-word;
+            vertical-align: middle;
         }
 
-        .exercise-table th {
-            background-color: var(--light-bg);
-            color: var(--secondary);
+        .progression-table th {
+            background-color: var(--primary);
+            color: white;
             font-weight: 600;
             text-align: center;
-            white-space: nowrap;
+        }
+
+        .progression-table td {
+            background-color: var(--light-bg);
         }
         
-        .exercise-table td input[type="text"] {
-            padding: 5px;
-            width: 100%;
+        .progression-table input, .progression-table select {
             border: 1px solid transparent; 
+            padding: 4px;
+            margin: -4px;
             background-color: transparent;
-            word-wrap: break-word; 
-            white-space: normal;
+            width: calc(100% + 8px);
             box-sizing: border-box;
-            height: 100%; 
+        }
+
+        .progression-table input:focus, .progression-table select:focus {
+            border-color: var(--primary);
+            background-color: white;
+            box-shadow: none;
         }
         
-        /* Larguras relativas no desktop */
-        .col-exe { width: 25%; } 
-        .col-maq { width: 15%; text-align: center; } 
-        .col-res { width: 15%; text-align: center; } 
-        .col-rep { width: 10%; text-align: center; } 
-        .col-prog { width: 35%; } 
+        .remove-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 8px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: background-color 0.2s;
+        }
         
-        /* --- Fim Estilos da Tabela de Exercícios --- */
+        .remove-btn:hover { background-color: #c82333; }
+        .action-cell { text-align: center; width: 40px; }
 
+        /* Estilo para marcar progresso */
+        .progression-status {
+            text-align: center;
+            width: 100px;
+        }
+        .progression-status select {
+            padding: 5px;
+            background-color: white;
+            border-radius: 4px;
+        }
 
+        /* --- FIM ESTILOS DA TABELA DE PROGRESSÃO --- */
+        
+        /* Estilos dos Botões de Rodapé */
         .button-container {
             text-align: center;
             margin: 25px 0;
@@ -263,110 +239,16 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
 
-        #btn-pdf:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(155, 94, 98, 0.4);
-        }
-        .btn-voltar:hover {
-            transform: translateY(-3px);
-            background-color: #e9ecef;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            color: var(--primary);
-        }
-        
-        #btn-pdf:active, .btn-voltar:active {
-            transform: translateY(-1px);
-        }
-
-        .feedback {
-            text-align: center;
-            margin: 15px 0;
-            padding: 12px;
-            border-radius: 8px;
-            background-color: rgba(155, 94, 98, 0.1);
-            color: var(--primary);
-            font-weight: 500;
-            display: none;
-            font-size: 0.9rem;
-        }
-
+        /* Oculta controles na impressão */
         @media print {
-            .button-container {
-                display: none;
-            }
-            .feedback {
+            .progression-controls, .remove-btn {
                 display: none !important;
             }
         }
-
-        /* --- MINI-CARTÕES: Solução para evitar o corte de texto no Mobile (Sua solução final) --- */
         @media (max-width: 768px) {
-            .form-row {
-                flex-direction: column;
-                gap: 0;
-            }
-            .button-container {
-                flex-direction: column;
-                gap: 10px;
-            }
-            .button-container a, .button-container button {
-                max-width: 100%;
-            }
-            
-            /* FORÇANDO A QUEBRA E AJUSTE EM MINI-CARTÕES */
-            .exercise-table {
-                width: 100%;
-                min-width: 0; /* Remove a largura mínima que forçava a rolagem */
-            }
-
-            .exercise-table, .exercise-table thead, .exercise-table tbody, .exercise-table th, .exercise-table td, .exercise-table tr { 
-                display: block; 
-            }
-            .exercise-table thead { 
-                display: none; 
-            }
-            .exercise-table tr {
-                border: 1px solid var(--primary);
-                margin-bottom: 20px;
-                padding: 10px;
-                border-radius: 8px;
-            }
-            .exercise-table td {
-                border: none;
-                border-bottom: 1px solid var(--border);
-                position: relative;
-                padding: 5px 0;
-                text-align: left;
-                display: flex;
-                flex-wrap: wrap;
-                align-items: center;
-                min-height: 35px;
-            }
-            .exercise-table td:last-child {
-                border-bottom: none;
-            }
-            
-            /* Estilo dos Labels */
-            .exercise-table td:before {
-                content: attr(data-label); 
-                font-weight: 600;
-                color: var(--primary);
-                width: 40%; 
-                padding-right: 10px;
-                text-align: left;
-            }
-
-            /* Estilo do Input */
-            .exercise-table td input[type="text"] {
-                width: 60%; 
-                text-align: left; 
-                white-space: normal;
-                word-wrap: break-word;
-                padding: 0;
-                height: auto; 
-                flex-grow: 1; 
-                min-width: 0;
-            }
+            .button-container { flex-direction: column; gap: 10px; }
+            .button-container a, .button-container button { max-width: 100%; }
+            .progression-table { display: block; overflow-x: auto; white-space: nowrap; }
         }
     </style>
 </head>
@@ -375,8 +257,8 @@
     <div class="container pdf-content" id="ficha-progressao">
         
         <header>
-            <h1>Ficha de Progressão de Exercícios</h1>
-            <p class="subtitle">Registro semanal/mensal do desempenho e adaptações</p>
+            <h1>Plano de Progressão de Exercícios</h1>
+            <p class="subtitle">Planejamento da evolução do aluno para níveis avançados</p>
         </header>
 
         <div class="logo-container">
@@ -384,95 +266,73 @@
         </div>
         
         <div class="section">
-            <h2><i class="fas fa-user-tag"></i> Informações do Aluno</h2>
+            <h2><i class="fas fa-user-chart"></i> Identificação e Plano</h2>
             <div class="form-row">
                 <div class="form-group">
-                    <label for="nome_aluno">Nome Completo</label>
-                    <input type="text" id="nome_aluno" name="nome_aluno" placeholder="Nome do aluno(a)">
+                    <label for="nome_aluno_prog">Nome do Aluno(a)</label>
+                    <input type="text" id="nome_aluno_prog" name="nome_aluno_prog" placeholder="Nome do aluno(a)" required>
                 </div>
-                <div class="form-group">
-                    <label for="fase_atual">Fase Atual</label>
-                    <input type="text" id="fase_atual" name="fase_atual" placeholder="Iniciante, Intermediário, Avançado">
+                <div class="form-group" style="flex: 0.5;">
+                    <label for="data_inicio_plano">Data Início do Plano</label>
+                    <input type="date" id="data_inicio_plano" name="data_inicio_plano" required>
                 </div>
             </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="data_inicio">Data de Início do Programa</label>
-                    <input type="date" id="data_inicio" name="data_inicio">
-                </div>
-                <div class="form-group">
-                    <label for="data_reavaliacao">Próxima Reavaliação</label>
-                    <input type="date" id="data_reavaliacao" name="data_reavaliacao">
-                </div>
+            <div class="form-group">
+                <label for="meta_principal">Meta Principal do Plano de Progressão</label>
+                <input type="text" id="meta_principal" name="meta_principal" placeholder="Ex: Dominar a sequência Clássica Intermediária, realizar o Short Spine com 1 mola.">
             </div>
         </div>
 
         <div class="section">
-            <h2><i class="fas fa-chart-line"></i> Rotina e Progressão de Exercícios</h2>
+            <h2><i class="fas fa-arrow-alt-circle-up"></i> Exercícios Focais de Progressão</h2>
+            <p class="subtitle" style="margin-bottom: 10px;">Liste os exercícios-chave e planeje as etapas de dificuldade (Variações/Cargas).</p>
             
-            <div class="form-group">
-                <label for="foco_semanal">Foco da Sessão/Semana</label>
-                <input type="text" id="foco_semanal" name="foco_semanal" placeholder="Ex: Estabilidade pélvica, Mobilidade torácica, Fortalecimento de Powerhouse.">
+            <div class="progression-controls">
+                <button type="button" class="add-exercise-btn" onclick="adicionarExercicioProgressao()">
+                    <i class="fas fa-plus"></i> Adicionar Exercício de Progressão
+                </button>
             </div>
 
-            <table class="exercise-table">
+            <table class="progression-table">
                 <thead>
                     <tr>
-                        <th class="col-exe">Exercício</th>
-                        <th class="col-maq">Máquina/Acessório</th>
-                        <th class="col-res">Resistência/Mola</th>
-                        <th class="col-rep">Séries/Reps</th>
-                        <th class="col-prog">Notas de Progressão/Adaptação</th>
+                        <th style="width: 25%;">Exercício Base</th>
+                        <th style="width: 30%;">Nível Atual / Variação Utilizada</th>
+                        <th style="width: 30%;">Próximo Nível / Meta de Variação</th>
+                        <th class="progression-status">Status</th>
+                        <th class="action-cell">Ação</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td class="col-exe" data-label="Exercício"><input type="text" name="exe1" placeholder="The Hundred" value="The Hundred"></td>
-                        <td class="col-maq" data-label="Máquina/Acessório"><input type="text" name="maq1" placeholder="Mat" value="Mat"></td>
-                        <td class="col-res" data-label="Resistência/Mola"><input type="text" name="res1" placeholder="N/A" value="N/A"></td>
-                        <td class="col-rep" data-label="Séries/Reps"><input type="text" name="rep1" placeholder="3x10" value="3x10"></td>
-                        <td class="col-prog" data-label="Notas de Progressão/Adaptação"><input type="text" name="prog1" placeholder="Melhora do imprint na série 3." value="Melhora do imprint na série 3."></td>
-                    </tr>
-                    <tr>
-                        <td class="col-exe" data-label="Exercício"><input type="text" name="exe2" placeholder="Footwork" value="Footwork"></td>
-                        <td class="col-maq" data-label="Máquina/Acessório"><input type="text" name="maq2" placeholder="Reformer" value="Reformer"></td>
-                        <td class="col-res" data-label="Resistência/Mola"><input type="text" name="res2" placeholder="2 Molas Azuis" value="2 Molas Azuis"></td>
-                        <td class="col-rep" data-label="Séries/Reps"><input type="text" name="rep2" placeholder="3x10" value="3x10"></td>
-                        <td class="col-prog" data-label="Notas de Progressão/Adaptação"><input type="text" name="prog2" placeholder="Introduzir meia ponta na próxima sessão." value="Introduzir meia ponta na próxima sessão."></td>
-                    </tr>
-                    <tr>
-                        <td class="col-exe" data-label="Exercício"><input type="text" name="exe3" placeholder="Roll Up" value="Roll Up"></td>
-                        <td class="col-maq" data-label="Máquina/Acessório"><input type="text" name="maq3" placeholder="Mat" value="Mat"></td>
-                        <td class="col-res" data-label="Resistência/Mola"><input type="text" name="res3" placeholder="N/A" value="N/A"></td>
-                        <td class="col-rep" data-label="Séries/Reps"><input type="text" name="rep3" placeholder="4x8" value="4x8"></td>
-                        <td class="col-prog" data-label="Notas de Progressão/Adaptação"><input type="text" name="prog3" placeholder="Foco na articulação da coluna (C-curve)." value="Foco na articulação da coluna (C-curve)."></td>
-                    </tr>
-                    <tr>
-                        <td class="col-exe" data-label="Exercício"><input type="text" name="exe4" placeholder="Side Leg Lifts" value="Side Leg Lifts"></td>
-                        <td class="col-maq" data-label="Máquina/Acessório"><input type="text" name="maq4" placeholder="Mat" value="Mat"></td>
-                        <td class="col-res" data-label="Resistência/Mola"><input type="text" name="res4" placeholder="N/A" value="N/A"></td>
-                        <td class="col-rep" data-label="Séries/Reps"><input type="text" name="rep4" placeholder="2x12" value="2x12"></td>
-                        <td class="col-prog" data-label="Notas de Progressão/Adaptação"><input type="text" name="prog4" placeholder="Manter o tronco estável." value="Manter o tronco estável."></td>
-                    </tr>
-                    <tr>
-                        <td class="col-exe" data-label="Exercício"><input type="text" name="exe5" placeholder="Short Spine Massage" value="Short Spine Massage"></td>
-                        <td class="col-maq" data-label="Máquina/Acessório"><input type="text" name="maq5" placeholder="Reformer" value="Reformer"></td>
-                        <td class="col-res" data-label="Resistência/Mola"><input type="text" name="res5" placeholder="2 Molas Vermelhas" value="2 Molas Vermelhas"></td>
-                        <td class="col-rep" data-label="Séries/Reps"><input type="text" name="rep5" placeholder="3x6" value="3x6"></td>
-                        <td class="col-prog" data-label="Notas de Progressão/Adaptação"><input type="text" name="prog5" placeholder="Ok. Sem dor." value="Ok. Sem dor."></td>
+                <tbody id="progression-list">
+                    <tr id="prog-row-0">
+                        <td><input type="text" name="exercicio-0" placeholder="Ex: The Hundred (O Cem)"></td>
+                        <td><input type="text" name="nivel_atual-0" placeholder="Ex: Pés no chão, 3 respirações"></td>
+                        <td><input type="text" name="proximo_nivel-0" placeholder="Ex: Pés em table top, 5 respirações"></td>
+                        <td class="progression-status">
+                             <select name="status-0">
+                                <option value="planejado">Planejado</option>
+                                <option value="em_progresso">Em Progresso</option>
+                                <option value="dominado">Dominado (Pronto para avançar)</option>
+                                <option value="barreira">Barreira/Rever</option>
+                            </select>
+                        </td>
+                        <td class="action-cell"><button type="button" class="remove-btn" onclick="removerExercicioProgressao('prog-row-0')"><i class="fas fa-trash"></i></button></td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
         <div class="section">
-            <h2><i class="fas fa-comment-dots"></i> Resumo e Feedback</h2>
+            <h2><i class="fas fa-chart-bar"></i> Análise e Ajustes</h2>
             <div class="form-group">
-                <label for="observacoes_gerais">Resumo do Desempenho e Feedback para o Aluno</label>
-                <textarea id="observacoes_gerais" name="observacoes_gerais" rows="4" placeholder="Anotações sobre a execução dos exercícios, pontos fortes, dificuldades e metas para a próxima sessão."></textarea>
+                <label for="barreiras">Principais Barreiras à Progressão</label>
+                <textarea id="barreiras" name="barreiras" rows="3" placeholder="Ex: Falta de estabilidade escapular no Push Through, encurtamento de cadeia posterior no Short Spine."></textarea>
+            </div>
+            <div class="form-group">
+                <label for="ajustes_plano">Ajustes Terapêuticos no Plano (Próximas 4 semanas)</label>
+                <textarea id="ajustes_plano" name="ajustes_plano" rows="3" placeholder="Ex: Focar em exercícios preparatórios de mobilidade torácica por 2 semanas antes de reintroduzir o próximo nível de rotação."></textarea>
             </div>
         </div>
-        
     </div>
     
     <div class="button-container">
@@ -481,14 +341,49 @@
         </a>
         
         <button id="btn-pdf" onclick="gerarPDF()">
-            <i class="fas fa-file-pdf"></i> Gerar e Baixar PDF
+            <i class="fas fa-file-pdf"></i> Gerar e Baixar Plano PDF
         </button>
     </div>
     
     <div class="feedback" id="feedback-msg">Gerando PDF... Aguarde!</div>
 
     <script>
-        // Função Principal do JavaScript para gerar o PDF
+        let progressionCounter = 1; // Contador para ID únicas da tabela de progressão
+
+        // Função para adicionar uma nova linha de progressão
+        function adicionarExercicioProgressao() {
+            const list = document.getElementById('progression-list');
+            const newRowId = `prog-row-${progressionCounter}`;
+            
+            const newRow = document.createElement('tr');
+            newRow.id = newRowId;
+            newRow.innerHTML = `
+                <td><input type="text" name="exercicio-${progressionCounter}" placeholder="Ex: Rolling Like a Ball"></td>
+                <td><input type="text" name="nivel_atual-${progressionCounter}" placeholder="Ex: 3 molas vermelhas, 8 rep."></td>
+                <td><input type="text" name="proximo_nivel-${progressionCounter}" placeholder="Ex: Pular 1 mola, 10 rep. com controle"></td>
+                <td class="progression-status">
+                    <select name="status-${progressionCounter}">
+                        <option value="planejado">Planejado</option>
+                        <option value="em_progresso">Em Progresso</option>
+                        <option value="dominado">Dominado (Pronto para avançar)</option>
+                        <option value="barreira">Barreira/Rever</option>
+                    </select>
+                </td>
+                <td class="action-cell"><button type="button" class="remove-btn" onclick="removerExercicioProgressao('${newRowId}')"><i class="fas fa-trash"></i></button></td>
+            `;
+            list.appendChild(newRow);
+            progressionCounter++;
+        }
+
+        // Função para remover uma linha de progressão
+        function removerExercicioProgressao(rowId) {
+            const row = document.getElementById(rowId);
+            if (row) {
+                row.remove();
+            }
+        }
+
+        // --- Funções de Geração de PDF (Mantidas) ---
         window.jsPDF = window.jspdf.jsPDF;
 
         function gerarPDF() {
@@ -500,12 +395,14 @@
 
             html2canvas(ficha, {
                 scale: 2, 
-                useCORS: true 
+                useCORS: true,
+                // Ignora os botões de controle ao tirar a foto
+                ignoreElements: (element) => element.classList.contains('progression-controls') || element.classList.contains('remove-btn')
             }).then(canvas => {
                 
                 const { jsPDF } = window.jspdf;
                 const imgData = canvas.toDataURL('image/png');
-                const pdf = new jsPDF('p', 'mm', 'a4');
+                const pdf = new jsPDF('p', 'mm', 'a4'); 
                 
                 const imgWidth = 210;
                 const pageHeight = 297;
@@ -523,15 +420,20 @@
                     heightLeft -= pageHeight;
                 }
                 
-                const nomeAluno = document.getElementById('nome_aluno').value.trim() || 'Aluno';
-                pdf.save(`Progressao_Exercicios_${nomeAluno.replace(/\s/g, '_')}.pdf`);
+                const nomeAluno = document.getElementById('nome_aluno_prog').value.trim() || 'Aluno';
+                pdf.save(`PlanoProgressao_${nomeAluno.replace(/\s/g, '_')}.pdf`);
 
                 feedbackMsg.style.display = 'none';
                 document.getElementById('btn-pdf').disabled = false;
             });
         }
         
+        // Inicialmente adicionar uma linha e esconder o feedback
         document.addEventListener('DOMContentLoaded', function() {
+            // Garante que a primeira linha de exemplo use a função de remoção
+            document.getElementById('prog-row-0').querySelector('.remove-btn').onclick = function() {
+                removerExercicioProgressao('prog-row-0');
+            };
             document.getElementById('feedback-msg').style.display = 'none';
         });
     </script>

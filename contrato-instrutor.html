@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contrato de Prestação de Serviços - Instrutor Pilates</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Variáveis de Cor, baseadas no seu código de referência */
+        :root {
+            --primary: #9B5E62; /* Tom original do Studio */
+            --secondary: #4D4F50;
+            --accent: #000000;
+            --light-bg: #f8f9fa;
+            --dark-text: #333;
+            --border: #e0e0e0;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Times New Roman', Times, serif; 
+            line-height: 1.6;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            padding: 30px;
+        }
+
+        header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 3px double var(--primary);
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* Estilos de Contrato */
+        h2 {
+            font-size: 1.2rem;
+            color: var(--secondary);
+            margin-top: 25px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 5px;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+        }
+        
+        h3 {
+             font-size: 1.1rem;
+             color: var(--primary);
+             margin-top: 15px;
+        }
+
+        p, li {
+            font-size: 1.05rem;
+            margin-bottom: 10px;
+            text-align: justify;
+        }
+
+        ol, ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        /* Campos de Formulário para preenchimento */
+        .form-group, .form-row {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .form-full { display: block; margin-bottom: 15px; }
+        .form-full label { display: block; font-weight: bold; margin-bottom: 5px; }
+        
+        .form-group label {
+            flex-basis: 150px;
+            font-weight: bold;
+            font-size: 1rem;
+            color: var(--dark-text);
+        }
+
+        .input-fill {
+            flex-grow: 1;
+            padding: 5px 8px;
+            border: none;
+            border-bottom: 1px dashed var(--dark-text);
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 1.05rem;
+            background-color: var(--light-bg);
+            transition: all 0.2s;
+        }
+
+        .input-fill:focus {
+            background-color: white;
+            border-bottom: 1px solid var(--secondary);
+            outline: none;
+        }
+
+        /* Assinaturas */
+        .signatures {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px dashed var(--border);
+        }
+
+        .signature-box { width: 45%; text-align: center; }
+        .signature-line { border-top: 1px solid var(--dark-text); margin-bottom: 5px; height: 1px; }
+        .signature-info { font-size: 0.9rem; font-weight: bold; text-transform: uppercase; }
+
+        /* Tabela Anexo */
+        .anexo-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 1rem; }
+        .anexo-table th, .anexo-table td { border: 1px solid var(--border); padding: 8px; text-align: center; }
+        .anexo-table th { background-color: var(--secondary); color: white; }
+        .anexo-table input { border: none; padding: 4px; width: 100%; text-align: center; font-family: Arial, sans-serif; background-color: transparent; }
+
+        /* --- ESTILOS DE BOTÃO (COPIADO DO CÓDIGO DE REFERÊNCIA) --- */
+        
+        .button-container {
+            text-align: center;
+            margin: 25px 0;
+            padding: 0 20px;
+            display: flex; 
+            justify-content: center;
+            gap: 15px; 
+        }
+
+        /* Estilo comum para botões no container */
+        .button-container a, .button-container button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none; 
+            max-width: 280px;
+            width: 100%;
+        }
+
+        #btn-pdf {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 4px 15px rgba(155, 94, 98, 0.3);
+        }
+
+        .btn-voltar {
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Efeitos de Hover e Active */
+        #btn-pdf:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(155, 94, 98, 0.4);
+        }
+        .btn-voltar:hover {
+            transform: translateY(-3px);
+            background-color: #e9ecef;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            color: var(--primary);
+        }
+        
+        #btn-pdf:active, .btn-voltar:active {
+            transform: translateY(-1px);
+        }
+
+        #btn-pdf:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        /* --- FIM ESTILOS DE BOTÃO --- */
+
+        /* Estilos de Impressão */
+        @media print {
+            body { background: none; padding: 0; }
+            .container { box-shadow: none; border: none; padding: 0; }
+            .button-container, .form-group label, .form-full label { display: none !important; }
+            .input-fill, .anexo-table input {
+                border-bottom: 1px solid black !important;
+                background-color: white !important;
+                padding: 0;
+                margin: 0;
+                font-size: 11pt; 
+            }
+            .anexo-table input { border: none !important; }
+            p, li, h1, h2, h3 { font-size: 12pt; }
+            .signatures { margin-top: 80px; }
+            .signature-info { font-size: 10pt; }
+            .identificacao-paragrafo { display: block; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container pdf-content" id="contrato-pilates">
+        
+        <header>
+            <h1>CONTRATO DE PRESTAÇÃO DE SERVIÇOS PROFISSIONAIS</h1>
+            <h2>INSTRUTOR(A) DE PILATES (PESSOA JURÍDICA/AUTÔNOMO)</h2>
+        </header>
+
+        <div class="identificacao-paragrafo">
+            <p style="text-indent: 40px;">Pelo presente instrumento particular de Contrato de Prestação de Serviços, de um lado, a **CONTRATANTE** (Studio), identificada por seus dados cadastrais, e de outro lado, o **CONTRATADO** (Instrutor), com os dados a seguir preenchidos, resolvem, de comum e livre acordo, ajustar e contratar o que segue:</p>
+            
+            <h3 style="margin-top: 30px;">DADOS DO CONTRATADO (INSTRUTOR)</h3>
+
+             <div class="form-full">
+                <label>Nome/Razão Social Completa:</label>
+                <input type="text" id="contratado_nome" class="input-fill" placeholder="Nome Completo ou Razão Social do Instrutor">
+            </div>
+            <div class="form-row">
+                <div class="form-group" style="flex: 1;">
+                    <label>CPF/CNPJ:</label>
+                    <input type="text" id="contratado_doc" class="input-fill" placeholder="CPF ou CNPJ do Instrutor">
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label>Profissão/Registro:</label>
+                    <input type="text" id="contratado_crefito" class="input-fill" placeholder="Ex: Fisioterapeuta/CREFITO 12345">
+                </div>
+            </div>
+            <div class="form-full">
+                <label>Endereço Completo:</label>
+                <input type="text" id="contratado_end" class="input-fill" placeholder="Endereço completo do Contratado">
+            </div>
+            
+             <h3 style="margin-top: 30px;">DADOS DO CONTRATANTE (STUDIO)</h3>
+            
+            <div class="form-full">
+                <label>Nome/Razão Social do Studio:</label>
+                <input type="text" id="contratante_nome" class="input-fill" placeholder="Nome/Razão Social do Studio">
+            </div>
+            <div class="form-row">
+                <div class="form-group" style="flex: 1;">
+                    <label>CNPJ:</label>
+                    <input type="text" id="contratante_cnpj" class="input-fill" placeholder="CNPJ do Studio">
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label>Representante Legal:</label>
+                    <input type="text" id="contratante_rep" class="input-fill" placeholder="Nome do Sócio/Proprietário">
+                </div>
+            </div>
+            <div class="form-full">
+                <label>Endereço do Studio:</label>
+                <input type="text" id="contratante_end" class="input-fill" placeholder="Endereço completo do Studio">
+            </div>
+            
+            <p style="margin-top: 30px;">As partes acima qualificadas, doravante denominadas **CONTRATANTE** e **CONTRATADO**, celebram o presente contrato, regido pelas seguintes cláusulas:</p>
+        </div>
+
+        <hr style="margin: 20px 0;">
+
+        <h2>CLÁUSULA PRIMEIRA - DO OBJETO</h2>
+        <p>1.1. O presente contrato tem por objeto a prestação de serviços de instrução e acompanhamento no Método Pilates, incluindo aulas em equipamentos e/ou solo, a ser realizada pelo **CONTRATADO** nas dependências da **CONTRATANTE**.</p>
+        <p>1.2. O **CONTRATADO** declara possuir a formação e/ou certificação técnica necessária para a prática do Método Pilates e responsabiliza-se civil e profissionalmente por seus atos durante a execução deste contrato.</p>
+
+        <h2>CLÁUSULA SEGUNDA - DAS OBRIGAÇÕES E RESPONSABILIDADES</h2>
+        
+        <h3>2.1. Do CONTRATADO (Instrutor):</h3>
+        <ol type="a">
+            <li>**Pontualidade:** Cumprir rigorosamente os horários acordados conforme Anexo I.</li>
+            <li>**Elaboração de Aulas:** Planejar e executar aulas personalizadas, observando a Avaliação Funcional e mantendo os registros de evolução.</li>
+            <li>**Conduta Profissional:** Atuar com ética, zelo, cortesia e respeitar as normas internas do Studio.</li>
+            <li>**Zelo:** Zelar pela limpeza, organização e correta utilização dos equipamentos e do espaço físico.</li>
+            <li>**Substituição:** O **CONTRATADO** providenciará sua substituição por profissional qualificado em casos de ausência (férias, doença, etc.), com aviso prévio e aprovação da **CONTRATANTE**.</li>
+        </ol>
+
+        <h3>2.2. Da CONTRATANTE (Studio):</h3>
+        <ol type="a">
+            <li>**Estrutura:** Disponibilizar o espaço físico, equipamentos, acessórios e materiais para a prestação dos serviços.</li>
+            <li>**Agendamento:** Realizar a captação e o agendamento dos alunos, de acordo com a disponibilidade do **CONTRATADO**.</li>
+            <li>**Remuneração:** Efetuar o pagamento dos serviços prestados na forma e prazos estabelecidos na Cláusula Terceira.</li>
+        </ol>
+
+        <h2>CLÁUSULA TERCEIRA - DA REMUNERAÇÃO E FORMA DE PAGAMENTO</h2>
+        
+        <div class="form-group">
+            <p>3.1. O valor acordado é de **R$**</p>
+            <input type="text" id="valor_hora" class="input-fill" style="width: 100px; margin: 0 5px;" placeholder="Valor">
+            <p>por hora/aula (50 minutos) efetivamente ministrada, ou de</p>
+            <input type="text" id="percentual_comissao" class="input-fill" style="width: 60px; margin: 0 5px;" placeholder="%">
+            <p>% (por cento) de comissão.</p>
+        </div>
+        <div class="form-group">
+            <p>3.2. O pagamento será realizado mensalmente, até o dia</p>
+            <input type="number" id="dia_pagamento" class="input-fill" style="width: 50px; margin: 0 5px;" placeholder="Dia">
+            <p>º (dia) do mês subsequente, mediante apresentação de Nota Fiscal (PJ) ou Recibo (Autônomo).</p>
+        </div>
+        <p>3.3. **Faltas/Aulas Não Ministradas:** As aulas não ministradas pelo **CONTRATADO** (e não repostas) não serão remuneradas.</p>
+
+        <h2>CLÁUSULA QUARTA - DA VEDAÇÃO AO VÍNCULO EMPREGATÍCIO (PJ/AUTÔNOMO)</h2>
+        <p>4.1. As partes declaram que o presente contrato é estritamente de natureza civil de Prestação de Serviços, não havendo, sob hipótese alguma, vínculo de natureza empregatícia (CLT).</p>
+        <p>4.2. O **CONTRATADO** atua com autonomia, não estando submetido à subordinação, pessoalidade e salário fixo (regime de CLT), sendo responsável por todos os seus encargos fiscais e tributários.</p>
+
+        <h2>CLÁUSULA QUINTA - DA RESCISÃO E DA VIGÊNCIA</h2>
+        <div class="form-group">
+             <p>5.1. O presente contrato vigorará por prazo indeterminado, a partir de</p>
+             <input type="date" id="data_inicio_contrato" class="input-fill" style="width: 150px; margin: 0 5px;">
+             <p>.</p>
+        </div>
+        <div class="form-group">
+            <p>5.2. **Rescisão sem Justa Causa:** Mediante aviso prévio por escrito de</p>
+            <input type="number" id="aviso_previo_dias" class="input-fill" style="width: 50px; margin: 0 5px;" placeholder="Nº">
+            <p>dias.</p>
+        </div>
+        <p>5.3. **Rescisão por Justa Causa:** O contrato poderá ser rescindido imediatamente em caso de violação grave das obrigações contratuais (má-conduta, desídia, etc.).</p>
+        
+        <h2>CLÁUSULA SEXTA - DAS DISPOSIÇÕES GERAIS</h2>
+        <p>6.1. **Confidencialidade:** O **CONTRATADO** compromete-se a manter sigilo absoluto sobre informações estratégicas, dados de alunos e métodos internos da **CONTRATANTE**.</p>
+        <p>6.2. **Uso de Imagem:** O **CONTRATADO** [**AUTORIZA** / **NÃO AUTORIZA**] a **CONTRATANTE** a utilizar sua imagem para fins de marketing e divulgação.</p>
+        <div class="form-group">
+            <p>6.3. **Foro:** Para dirimir controvérsias, as partes elegem o foro da Comarca de</p>
+            <input type="text" id="foro_cidade" class="input-fill" style="width: 150px; margin: 0 5px;" placeholder="Cidade">
+            <p>, Estado de</p>
+            <input type="text" id="foro_estado" class="input-fill" style="width: 50px; margin: 0 5px;" placeholder="UF">
+            <p>.</p>
+        </div>
+        
+        <div class="signatures">
+            <div class="signature-box">
+                <div class="signature-line"></div>
+                <p class="signature-info" id="assinatura_contratante"></p>
+                <p class="signature-info">CONTRATANTE</p>
+            </div>
+            <div class="signature-box">
+                <div class="signature-line"></div>
+                <p class="signature-info" id="assinatura_contratado"></p>
+                <p class="signature-info">CONTRATADO</p>
+            </div>
+        </div>
+        
+        <p style="margin-top: 30px; text-align: center;">Testemunhas:</p>
+        <div class="signatures">
+            <div class="signature-box">
+                <div class="signature-line"></div>
+                <p class="signature-info">Nome:</p>
+                <p class="signature-info">CPF:</p>
+            </div>
+            <div class="signature-box">
+                <div class="signature-line"></div>
+                <p class="signature-info">Nome:</p>
+                <p class="signature-info">CPF:</p>
+            </div>
+        </div>
+
+        <p style="margin-top: 50px; text-align: right;">[<span id="local_data_final">Local, Data</span>]</p>
+
+
+        <h2 style="margin-top: 50px;">ANEXO I – ESCALA DE HORÁRIOS E DISPONIBILIDADE</h2>
+        <table class="anexo-table">
+            <thead>
+                <tr>
+                    <th>Dia da Semana</th>
+                    <th>Início</th>
+                    <th>Fim</th>
+                    <th>Observações (Ex: Administrativo, Online)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Segunda</td><td><input type="text" placeholder="08:00"></td><td><input type="text" placeholder="12:00"></td><td><input type="text" placeholder="-"></td></tr>
+                <tr><td>Terça</td><td><input type="text" placeholder="14:00"></td><td><input type="text" placeholder="18:00"></td><td><input type="text" placeholder="-"></td></tr>
+                <tr><td>Quarta</td><td><input type="text" placeholder="08:00"></td><td><input type="text" placeholder="12:00"></td><td><input type="text" placeholder="-"></td></tr>
+                <tr><td>Quinta</td><td><input type="text" placeholder="14:00"></td><td><input type="text" placeholder="18:00"></td><td><input type="text" placeholder="-"></td></tr>
+                <tr><td>Sexta</td><td><input type="text" placeholder="08:00"></td><td><input type="text" placeholder="12:00"></td><td><input type="text" placeholder="-"></td></tr>
+                <tr><td>Sábado</td><td><input type="text" placeholder="-"></td><td><input type="text" placeholder="-"></td><td><input type="text" placeholder="-"></td></tr>
+            </tbody>
+        </table>
+
+    </div>
+    
+    <div class="button-container">
+        <a href="index.html" class="btn-voltar">
+             <i class="fas fa-arrow-left"></i> Voltar para Início
+        </a>
+        
+        <button id="btn-pdf" onclick="gerarPDF()">
+            <i class="fas fa-file-pdf"></i> Gerar e Baixar Contrato PDF
+        </button>
+    </div>
+    
+    <div class="feedback" id="feedback-msg" style="display: none;">Gerando PDF... Aguarde!</div>
+
+    <script>
+        window.jsPDF = window.jspdf.jsPDF;
+
+        // Função para atualizar as assinaturas e a data/local final
+        function updateContractInfo() {
+            // Assinaturas
+            document.getElementById('assinatura_contratante').textContent = document.getElementById('contratante_nome').value.toUpperCase() || 'NOME DO STUDIO/EMPRESA';
+            document.getElementById('assinatura_contratado').textContent = document.getElementById('contratado_nome').value.toUpperCase() || 'NOME COMPLETO DO INSTRUTOR';
+            
+            // Local e Data Final
+            const foroCidade = document.getElementById('foro_cidade').value || 'CIDADE';
+            const dataAtual = new Date().toLocaleDateString('pt-BR'); 
+            document.getElementById('local_data_final').textContent = `${foroCidade}, ${dataAtual}.`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Atualiza o contrato sempre que um campo relevante muda
+            const fieldsToMonitor = ['contratante_nome', 'contratado_nome', 'foro_cidade'];
+            fieldsToMonitor.forEach(id => {
+                document.getElementById(id).addEventListener('input', updateContractInfo);
+            });
+            
+            updateContractInfo(); 
+             document.getElementById('feedback-msg').style.display = 'none';
+        });
+
+
+        // --- Função de Geração de PDF (Reutilizada) ---
+        function gerarPDF() {
+            const contrato = document.getElementById('contrato-pilates');
+            const feedbackMsg = document.getElementById('feedback-msg');
+            
+            updateContractInfo(); 
+            
+            feedbackMsg.style.display = 'block';
+            document.getElementById('btn-pdf').disabled = true;
+
+            html2canvas(contrato, {
+                scale: 2, 
+                useCORS: true,
+            }).then(canvas => {
+                
+                const { jsPDF } = window.jspdf;
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('p', 'mm', 'a4'); 
+                
+                const imgWidth = 210;
+                const pageHeight = 297;
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+                let heightLeft = imgHeight;
+                let position = 0;
+                
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+                
+                while (heightLeft >= 0) {
+                    position = heightLeft - pageHeight; 
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+                
+                const nomeInstrutor = document.getElementById('contratado_nome').value.trim() || 'Instrutor';
+                pdf.save(`Contrato_Pilates_${nomeInstrutor.replace(/\s/g, '_')}.pdf`);
+
+                feedbackMsg.style.display = 'none';
+                document.getElementById('btn-pdf').disabled = false;
+            });
+        }
+    </script>
+</body>
+</html>
