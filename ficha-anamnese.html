@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ficha de Anamnese - Studio Mariana Marques</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #9B5E62;
+            --secondary: #4D4F50;
+            --accent: #000000;
+            --light-bg: #f8f9fa;
+            --dark-text: #333;
+            --light-text: #6c757d;
+            --border: #e0e0e0;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            color: var(--dark-text);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        header {
+            text-align: center;
+            padding: 25px 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" opacity="0.1"><path d="M0 0h100v100H0z" fill="none"/><path d="M20 20h60v60H20z" stroke="white" stroke-width="2" fill="none"/></svg>');
+            background-size: 50px 50px;
+        }
+
+        .logo-container {
+            text-align: center;
+            padding: 20px 0 15px;
+            background-color: white;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            max-width: 250px;
+            height: auto;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .section {
+            margin: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .section:hover {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        h2 {
+            color: var(--primary);
+            margin-bottom: 18px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            font-size: 1.3rem;
+        }
+
+        h2 i {
+            margin-right: 10px;
+            font-size: 1.3rem;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--dark-text);
+            font-size: 0.95rem;
+        }
+
+        input[type="text"], input[type="number"], input[type="date"], textarea, select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            background-color: white;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(155, 94, 98, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 70px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .checkbox-group, .radio-group {
+            margin-top: 8px;
+        }
+
+        .checkbox-group label, .radio-group label {
+            display: inline-flex;
+            align-items: center;
+            font-weight: normal;
+            margin-right: 15px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .checkbox-group input, .radio-group input {
+            margin-right: 6px;
+            transform: scale(1.1);
+        }
+
+        .eva-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 8px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .eva-table td {
+            border: 1px solid var(--border);
+            padding: 10px;
+            text-align: center;
+            background-color: white;
+            font-size: 0.9rem;
+        }
+
+        .eva-table tr:first-child td {
+            font-weight: 600;
+            background-color: #f8f9fa;
+        }
+
+        .eva-table input[type="radio"] {
+            margin: 0;
+            transform: scale(1.2);
+        }
+
+        .eva-scale-label {
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--light-text);
+            margin-top: 5px;
+        }
+
+        .button-container {
+            text-align: center;
+            margin: 25px 0;
+            padding: 0 20px;
+            display: flex; /* Adiciona flexbox para alinhar botões */
+            justify-content: center;
+            gap: 15px; /* Espaço entre os botões */
+        }
+
+        /* Estilo comum para botões no container */
+        .button-container a, .button-container button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none; /* Remove sublinhado do link */
+            max-width: 280px;
+            width: 100%;
+        }
+
+        #btn-pdf {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 4px 15px rgba(155, 94, 98, 0.3);
+        }
+
+        /* NOVO ESTILO PARA O BOTÃO VOLTAR */
+        .btn-voltar {
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Efeitos de Hover e Active */
+        #btn-pdf:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(155, 94, 98, 0.4);
+        }
+        .btn-voltar:hover {
+            transform: translateY(-3px);
+            background-color: #e9ecef;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            color: var(--primary);
+        }
+        
+        #btn-pdf:active, .btn-voltar:active {
+            transform: translateY(-1px);
+        }
+
+        #btn-pdf:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .feedback {
+            text-align: center;
+            margin: 15px 0;
+            padding: 12px;
+            border-radius: 8px;
+            background-color: rgba(155, 94, 98, 0.1);
+            color: var(--primary);
+            font-weight: 500;
+            display: none;
+            font-size: 0.9rem;
+        }
+
+        @media print {
+            .button-container {
+                display: none;
+            }
+            
+            .feedback {
+                display: none !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            h1 {
+                font-size: 1.6rem;
+            }
+            
+            .section {
+                margin: 15px;
+                padding: 18px;
+            }
+            
+            .logo {
+                max-width: 200px;
+            }
+            
+            .container {
+                max-width: 95%;
+            }
+            
+            /* Empilha os botões em telas pequenas */
+            .button-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .button-container a, .button-container button {
+                max-width: 100%;
+            }
+        }
+
+        /* Efeitos de foco personalizados */
+        .form-group:focus-within label {
+            color: var(--primary);
+        }
+
+        /* Estilo para campos condicionais */
+        .conditional-field {
+            margin-top: 8px;
+            padding-left: 15px;
+            border-left: 3px solid var(--primary);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container pdf-content" id="ficha-anamnese">
+        
+        <header>
+            <h1>Ficha de Anamnese e Avaliação Funcional</h1>
+            <p class="subtitle">Avaliação completa para um plano de exercícios personalizado</p>
+        </header>
+
+        <div class="logo-container">
+            <img src="img/logo.png" alt="Logo do Studio" class="logo"> 
+        </div>
+        <div class="section">
+            <h2><i class="fas fa-user"></i> Identificação</h2>
+            <div class="form-group">
+                <label for="nome">Nome Completo</label>
+                <input type="text" id="nome" name="nome" placeholder="Digite seu nome completo">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="dataNascimento">Data de Nascimento</label>
+                    <input type="date" id="dataNascimento" name="dataNascimento">
+                </div>
+                <div class="form-group">
+                    <label for="profissao">Profissão</label>
+                    <input type="text" id="profissao" name="profissao" placeholder="Sua profissão">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="contato">Telefone / E-mail</label>
+                <input type="text" id="contato" name="contato" placeholder="Seu telefone e/ou e-mail">
+            </div>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-stethoscope"></i> Queixa Principal e Objetivos</h2>
+            <div class="form-group">
+                <label for="queixa">Queixa Principal (dor, desconforto, etc.)</label>
+                <textarea id="queixa" name="queixa" rows="3" placeholder="Descreva sua queixa principal"></textarea>
+            </div>
+             <div class="form-group">
+                <label>Nível da Dor (EVA - Escala Visual Analógica)</label>
+                <table class="eva-table">
+                    <tr>
+                        <td>0</td>
+                        <td>1</td>
+                        <td>2</td>
+                        <td>3</td>
+                        <td>4</td>
+                        <td>5</td>
+                        <td>6</td>
+                        <td>7</td>
+                        <td>8</td>
+                        <td>9</td>
+                        <td>10</td>
+                    </tr>
+                    <tr>
+                        <td><input type="radio" name="eva" value="0"></td>
+                        <td><input type="radio" name="eva" value="1"></td>
+                        <td><input type="radio" name="eva" value="2"></td>
+                        <td><input type="radio" name="eva" value="3"></td>
+                        <td><input type="radio" name="eva" value="4"></td>
+                        <td><input type="radio" name="eva" value="5"></td>
+                        <td><input type="radio" name="eva" value="6"></td>
+                        <td><input type="radio" name="eva" value="7"></td>
+                        <td><input type="radio" name="eva" value="8"></td>
+                        <td><input type="radio" name="eva" value="9"></td>
+                        <td><input type="radio" name="eva" value="10"></td>
+                    </tr>
+                </table>
+                <div class="eva-scale-label">0 = Sem Dor | 10 = Pior Dor Possível</div>
+            </div>
+            <div class="form-group">
+                <label>Objetivos com o Pilates (Pode selecionar mais de um)</label>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" name="objetivos" value="alivio_dor"> Alívio de Dor</label>
+                    <label><input type="checkbox" name="objetivos" value="melhora_postural"> Melhora Postural</label>
+                    <label><input type="checkbox" name="objetivos" value="fortalecimento"> Fortalecimento Muscular</label>
+                    <label><input type="checkbox" name="objetivos" value="flexibilidade"> Flexibilidade/Alongamento</label>
+                    <label><input type="checkbox" name="objetivos" value="condicionamento"> Condicionamento Físico</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-heartbeat"></i> Histórico Clínico e Hábitos</h2>
+            <div class="form-group">
+                <label for="patologias">Patologias/Diagnósticos Prévios (Hérnia, Osteoporose, Diabetes, etc.)</label>
+                <textarea id="patologias" name="patologias" rows="2" placeholder="Liste quaisquer condições médicas prévias"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Medicações em Uso</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="medicamentos" value="nao" checked> Não</label>
+                    <label><input type="radio" name="medicamentos" value="sim"> Sim</label>
+                </div>
+                <div id="medicamentos-field" class="conditional-field" style="display: none;">
+                    <input type="text" id="quaisMedicamentos" name="quaisMedicamentos" placeholder="Especifique as medicações...">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Cirurgias Prévias</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="cirurgias" value="nao" checked> Não</label>
+                    <label><input type="radio" name="cirurgias" value="sim"> Sim</label>
+                </div>
+                <div id="cirurgias-field" class="conditional-field" style="display: none;">
+                    <input type="text" id="quaisCirurgias" name="quaisCirurgias" placeholder="Especifique as cirurgias...">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="sono">Qualidade do Sono (Horas/Noite)</label>
+                    <input type="number" id="sono" name="sono" min="1" max="15" placeholder="Ex: 7">
+                </div>
+                <div class="form-group">
+                    <label for="agua">Ingestão de Água (Copos/Dia)</label>
+                    <input type="number" id="agua" name="agua" min="1" max="20" placeholder="Ex: 8">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="atividadeFisica">Pratica outra Atividade Física? (Qual e frequência)</label>
+                <input type="text" id="atividadeFisica" name="atividadeFisica" placeholder="Ex: Caminhada, 3x por semana">
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2><i class="fas fa-clipboard-check"></i> Observações Finais</h2>
+            <div class="form-group">
+                <label for="observacoes">Observações do Instrutor</label>
+                <textarea id="observacoes" name="observacoes" rows="4" placeholder="Anotações adicionais sobre a avaliação"></textarea>
+            </div>
+        </div>
+
+    </div>
+    
+    <div class="button-container">
+        <a href="index.html" class="btn-voltar">
+             <i class="fas fa-arrow-left"></i> Voltar para Início
+        </a>
+        
+        <button id="btn-pdf" onclick="gerarPDF()">
+            <i class="fas fa-file-pdf"></i> Gerar e Baixar PDF
+        </button>
+    </div>
+    
+    <div class="feedback" id="feedback-msg">Gerando PDF... Aguarde!</div>
+
+    <script>
+        // Função Principal do JavaScript para gerar o PDF
+        window.jsPDF = window.jspdf.jsPDF;
+
+        function gerarPDF() {
+            const ficha = document.getElementById('ficha-anamnese');
+            const feedbackMsg = document.getElementById('feedback-msg');
+            
+            // 1. Mostrar feedback para o usuário
+            feedbackMsg.style.display = 'block';
+            document.getElementById('btn-pdf').disabled = true;
+
+            // 2. Usar html2canvas para converter o HTML em uma imagem (canvas)
+            html2canvas(ficha, {
+                scale: 2, // Aumenta a resolução para melhor qualidade no PDF
+                useCORS: true // Necessário se houver imagens externas
+            }).then(canvas => {
+                
+                // 3. Inicializar o jsPDF
+                const { jsPDF } = window.jspdf;
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('p', 'mm', 'a4'); // 'p'=retrato, 'mm'=milímetros, 'a4'=tamanho
+                
+                const imgWidth = 210; // Largura A4 em mm
+                const pageHeight = 297; // Altura A4 em mm
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+                let heightLeft = imgHeight;
+                let position = 0;
+                
+                // 4. Adicionar a Imagem ao PDF (Tratando múltiplas páginas)
+                
+                // Primeira página
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+                
+                // Páginas adicionais, se o conteúdo for maior que uma A4
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+                
+                // 5. Baixar o arquivo PDF
+                const nomeAluno = document.getElementById('nome').value.trim() || 'Aluno';
+                pdf.save(`Anamnese_${nomeAluno.replace(/\s/g, '_')}.pdf`);
+
+                // 6. Limpar o formulário
+                limparFormulario();
+
+                // 7. Resetar o feedback
+                feedbackMsg.style.display = 'none';
+                document.getElementById('btn-pdf').disabled = false;
+            });
+        }
+
+        // Função para limpar todo o formulário
+        function limparFormulario() {
+            // Limpar campos de texto
+            document.getElementById('nome').value = '';
+            document.getElementById('profissao').value = '';
+            document.getElementById('contato').value = '';
+            document.getElementById('queixa').value = '';
+            document.getElementById('patologias').value = '';
+            document.getElementById('quaisMedicamentos').value = '';
+            document.getElementById('quaisCirurgias').value = '';
+            document.getElementById('sono').value = '';
+            document.getElementById('agua').value = '';
+            document.getElementById('atividadeFisica').value = '';
+            document.getElementById('observacoes').value = '';
+            
+            // Limpar data
+            document.getElementById('dataNascimento').value = '';
+            
+            // Limpar radio buttons da escala EVA
+            const radiosEva = document.querySelectorAll('input[name="eva"]');
+            radiosEva.forEach(radio => {
+                radio.checked = false;
+            });
+            
+            // Limpar checkboxes de objetivos
+            const checkboxesObjetivos = document.querySelectorAll('input[name="objetivos"]');
+            checkboxesObjetivos.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            
+            // Resetar radio buttons de medicamentos e cirurgias
+            document.querySelector('input[name="medicamentos"][value="nao"]').checked = true;
+            document.querySelector('input[name="cirurgias"][value="nao"]').checked = true;
+            
+            // Esconder campos condicionais
+            document.getElementById('medicamentos-field').style.display = 'none';
+            document.getElementById('cirurgias-field').style.display = 'none';
+        }
+
+        // Mostrar/ocultar campos condicionais
+        document.addEventListener('DOMContentLoaded', function() {
+            // Para medicamentos
+            const medicamentosRadios = document.querySelectorAll('input[name="medicamentos"]');
+            const medicamentosField = document.getElementById('medicamentos-field');
+            
+            medicamentosRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'sim') {
+                        medicamentosField.style.display = 'block';
+                    } else {
+                        medicamentosField.style.display = 'none';
+                    }
+                });
+            });
+            
+            // Para cirurgias
+            const cirurgiasRadios = document.querySelectorAll('input[name="cirurgias"]');
+            const cirurgiasField = document.getElementById('cirurgias-field');
+            
+            cirurgiasRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'sim') {
+                        cirurgiasField.style.display = 'block';
+                    } else {
+                        cirurgiasField.style.display = 'none';
+                    }
+                });
+            });
+            
+            // Inicialmente esconder o feedback
+            document.getElementById('feedback-msg').style.display = 'none';
+        });
+    </script>
+</body>
+</html>

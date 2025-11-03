@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ficha de Progressão de Exercícios - Studio Mariana Marques</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #9B5E62;
+            --secondary: #4D4F50;
+            --accent: #000000;
+            --light-bg: #f8f9fa;
+            --dark-text: #333;
+            --light-text: #6c757d;
+            --border: #e0e0e0;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            color: var(--dark-text);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            /* Mantendo a largura ampla para o desktop */
+            max-width: 1000px; 
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        header {
+            text-align: center;
+            padding: 25px 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" opacity="0.1"><path d="M0 0h100v100H0z" fill="none"/><path d="M20 20h60v60H20z" stroke="white" stroke-width="2" fill="none"/></svg>');
+            background-size: 50px 50px;
+        }
+
+        .logo-container {
+            text-align: center;
+            padding: 20px 0 15px;
+            background-color: white;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            max-width: 250px;
+            height: auto;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .section {
+            margin: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .section:hover {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        h2 {
+            color: var(--primary);
+            margin-bottom: 18px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            font-size: 1.3rem;
+        }
+
+        h2 i {
+            margin-right: 10px;
+            font-size: 1.3rem;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--dark-text);
+            font-size: 0.95rem;
+        }
+
+        input[type="text"], input[type="number"], input[type="date"], textarea, select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            background-color: white;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(155, 94, 98, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 70px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        /* --- Estilos da Tabela de Exercícios (Progressão) --- */
+        
+        /* REMOVENDO CLASSE table-wrapper e min-width FIXO */
+        .exercise-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            /*table-layout: fixed; /* Desativado para mobile*/
+        }
+
+        .exercise-table th, .exercise-table td {
+            border: 1px solid var(--border);
+            padding: 8px 10px;
+            text-align: left;
+            font-size: 0.9rem;
+            word-wrap: break-word;
+        }
+
+        .exercise-table th {
+            background-color: var(--light-bg);
+            color: var(--secondary);
+            font-weight: 600;
+            text-align: center;
+            white-space: nowrap;
+        }
+        
+        .exercise-table td input[type="text"] {
+            padding: 5px;
+            width: 100%;
+            border: 1px solid transparent; 
+            background-color: transparent;
+            word-wrap: break-word; 
+            white-space: normal;
+            box-sizing: border-box;
+            height: 100%; 
+        }
+        
+        /* Larguras relativas no desktop */
+        .col-exe { width: 25%; } 
+        .col-maq { width: 15%; text-align: center; } 
+        .col-res { width: 15%; text-align: center; } 
+        .col-rep { width: 10%; text-align: center; } 
+        .col-prog { width: 35%; } 
+        
+        /* --- Fim Estilos da Tabela de Exercícios --- */
+
+
+        .button-container {
+            text-align: center;
+            margin: 25px 0;
+            padding: 0 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .button-container a, .button-container button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            max-width: 280px;
+            width: 100%;
+        }
+
+        #btn-pdf {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 4px 15px rgba(155, 94, 98, 0.3);
+        }
+
+        .btn-voltar {
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        #btn-pdf:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(155, 94, 98, 0.4);
+        }
+        .btn-voltar:hover {
+            transform: translateY(-3px);
+            background-color: #e9ecef;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            color: var(--primary);
+        }
+        
+        #btn-pdf:active, .btn-voltar:active {
+            transform: translateY(-1px);
+        }
+
+        .feedback {
+            text-align: center;
+            margin: 15px 0;
+            padding: 12px;
+            border-radius: 8px;
+            background-color: rgba(155, 94, 98, 0.1);
+            color: var(--primary);
+            font-weight: 500;
+            display: none;
+            font-size: 0.9rem;
+        }
+
+        @media print {
+            .button-container {
+                display: none;
+            }
+            .feedback {
+                display: none !important;
+            }
+        }
+
+        /* --- MINI-CARTÕES: Solução para evitar o corte de texto no Mobile (Sua solução final) --- */
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            .button-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .button-container a, .button-container button {
+                max-width: 100%;
+            }
+            
+            /* FORÇANDO A QUEBRA E AJUSTE EM MINI-CARTÕES */
+            .exercise-table {
+                width: 100%;
+                min-width: 0; /* Remove a largura mínima que forçava a rolagem */
+            }
+
+            .exercise-table, .exercise-table thead, .exercise-table tbody, .exercise-table th, .exercise-table td, .exercise-table tr { 
+                display: block; 
+            }
+            .exercise-table thead { 
+                display: none; 
+            }
+            .exercise-table tr {
+                border: 1px solid var(--primary);
+                margin-bottom: 20px;
+                padding: 10px;
+                border-radius: 8px;
+            }
+            .exercise-table td {
+                border: none;
+                border-bottom: 1px solid var(--border);
+                position: relative;
+                padding: 5px 0;
+                text-align: left;
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                min-height: 35px;
+            }
+            .exercise-table td:last-child {
+                border-bottom: none;
+            }
+            
+            /* Estilo dos Labels */
+            .exercise-table td:before {
+                content: attr(data-label); 
+                font-weight: 600;
+                color: var(--primary);
+                width: 40%; 
+                padding-right: 10px;
+                text-align: left;
+            }
+
+            /* Estilo do Input */
+            .exercise-table td input[type="text"] {
+                width: 60%; 
+                text-align: left; 
+                white-space: normal;
+                word-wrap: break-word;
+                padding: 0;
+                height: auto; 
+                flex-grow: 1; 
+                min-width: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container pdf-content" id="ficha-progressao">
+        
+        <header>
+            <h1>Ficha de Progressão de Exercícios</h1>
+            <p class="subtitle">Registro semanal/mensal do desempenho e adaptações</p>
+        </header>
+
+        <div class="logo-container">
+            <img src="img/logo.png" alt="Logo do Studio" class="logo"> 
+        </div>
+        
+        <div class="section">
+            <h2><i class="fas fa-user-tag"></i> Informações do Aluno</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="nome_aluno">Nome Completo</label>
+                    <input type="text" id="nome_aluno" name="nome_aluno" placeholder="Nome do aluno(a)">
+                </div>
+                <div class="form-group">
+                    <label for="fase_atual">Fase Atual</label>
+                    <input type="text" id="fase_atual" name="fase_atual" placeholder="Iniciante, Intermediário, Avançado">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="data_inicio">Data de Início do Programa</label>
+                    <input type="date" id="data_inicio" name="data_inicio">
+                </div>
+                <div class="form-group">
+                    <label for="data_reavaliacao">Próxima Reavaliação</label>
+                    <input type="date" id="data_reavaliacao" name="data_reavaliacao">
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-chart-line"></i> Rotina e Progressão de Exercícios</h2>
+            
+            <div class="form-group">
+                <label for="foco_semanal">Foco da Sessão/Semana</label>
+                <input type="text" id="foco_semanal" name="foco_semanal" placeholder="Ex: Estabilidade pélvica, Mobilidade torácica, Fortalecimento de Powerhouse.">
+            </div>
+
+            <table class="exercise-table">
+                <thead>
+                    <tr>
+                        <th class="col-exe">Exercício</th>
+                        <th class="col-maq">Máquina/Acessório</th>
+                        <th class="col-res">Resistência/Mola</th>
+                        <th class="col-rep">Séries/Reps</th>
+                        <th class="col-prog">Notas de Progressão/Adaptação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="col-exe" data-label="Exercício"><input type="text" name="exe1" placeholder="The Hundred" value="The Hundred"></td>
+                        <td class="col-maq" data-label="Máquina/Acessório"><input type="text" name="maq1" placeholder="Mat" value="Mat"></td>
+                        <td class="col-res" data-label="Resistência/Mola"><input type="text" name="res1" placeholder="N/A" value="N/A"></td>
+                        <td class="col-rep" data-label="Séries/Reps"><input type="text" name="rep1" placeholder="3x10" value="3x10"></td>
+                        <td class="col-prog" data-label="Notas de Progressão/Adaptação"><input type="text" name="prog1" placeholder="Melhora do imprint na série 3." value="Melhora do imprint na série 3."></td>
+                    </tr>
+                    <tr>
+                        <td class="col-exe" data-label="Exercício"><input type="text" name="exe2" placeholder="Footwork" value="Footwork"></td>
+                        <td class="col-maq" data-label="Máquina/Acessório"><input type="text" name="maq2" placeholder="Reformer" value="Reformer"></td>
+                        <td class="col-res" data-label="Resistência/Mola"><input type="text" name="res2" placeholder="2 Molas Azuis" value="2 Molas Azuis"></td>
+                        <td class="col-rep" data-label="Séries/Reps"><input type="text" name="rep2" placeholder="3x10" value="3x10"></td>
+                        <td class="col-prog" data-label="Notas de Progressão/Adaptação"><input type="text" name="prog2" placeholder="Introduzir meia ponta na próxima sessão." value="Introduzir meia ponta na próxima sessão."></td>
+                    </tr>
+                    <tr>
+                        <td class="col-exe" data-label="Exercício"><input type="text" name="exe3" placeholder="Roll Up" value="Roll Up"></td>
+                        <td class="col-maq" data-label="Máquina/Acessório"><input type="text" name="maq3" placeholder="Mat" value="Mat"></td>
+                        <td class="col-res" data-label="Resistência/Mola"><input type="text" name="res3" placeholder="N/A" value="N/A"></td>
+                        <td class="col-rep" data-label="Séries/Reps"><input type="text" name="rep3" placeholder="4x8" value="4x8"></td>
+                        <td class="col-prog" data-label="Notas de Progressão/Adaptação"><input type="text" name="prog3" placeholder="Foco na articulação da coluna (C-curve)." value="Foco na articulação da coluna (C-curve)."></td>
+                    </tr>
+                    <tr>
+                        <td class="col-exe" data-label="Exercício"><input type="text" name="exe4" placeholder="Side Leg Lifts" value="Side Leg Lifts"></td>
+                        <td class="col-maq" data-label="Máquina/Acessório"><input type="text" name="maq4" placeholder="Mat" value="Mat"></td>
+                        <td class="col-res" data-label="Resistência/Mola"><input type="text" name="res4" placeholder="N/A" value="N/A"></td>
+                        <td class="col-rep" data-label="Séries/Reps"><input type="text" name="rep4" placeholder="2x12" value="2x12"></td>
+                        <td class="col-prog" data-label="Notas de Progressão/Adaptação"><input type="text" name="prog4" placeholder="Manter o tronco estável." value="Manter o tronco estável."></td>
+                    </tr>
+                    <tr>
+                        <td class="col-exe" data-label="Exercício"><input type="text" name="exe5" placeholder="Short Spine Massage" value="Short Spine Massage"></td>
+                        <td class="col-maq" data-label="Máquina/Acessório"><input type="text" name="maq5" placeholder="Reformer" value="Reformer"></td>
+                        <td class="col-res" data-label="Resistência/Mola"><input type="text" name="res5" placeholder="2 Molas Vermelhas" value="2 Molas Vermelhas"></td>
+                        <td class="col-rep" data-label="Séries/Reps"><input type="text" name="rep5" placeholder="3x6" value="3x6"></td>
+                        <td class="col-prog" data-label="Notas de Progressão/Adaptação"><input type="text" name="prog5" placeholder="Ok. Sem dor." value="Ok. Sem dor."></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-comment-dots"></i> Resumo e Feedback</h2>
+            <div class="form-group">
+                <label for="observacoes_gerais">Resumo do Desempenho e Feedback para o Aluno</label>
+                <textarea id="observacoes_gerais" name="observacoes_gerais" rows="4" placeholder="Anotações sobre a execução dos exercícios, pontos fortes, dificuldades e metas para a próxima sessão."></textarea>
+            </div>
+        </div>
+        
+    </div>
+    
+    <div class="button-container">
+        <a href="index.html" class="btn-voltar">
+             <i class="fas fa-arrow-left"></i> Voltar para Início
+        </a>
+        
+        <button id="btn-pdf" onclick="gerarPDF()">
+            <i class="fas fa-file-pdf"></i> Gerar e Baixar PDF
+        </button>
+    </div>
+    
+    <div class="feedback" id="feedback-msg">Gerando PDF... Aguarde!</div>
+
+    <script>
+        // Função Principal do JavaScript para gerar o PDF
+        window.jsPDF = window.jspdf.jsPDF;
+
+        function gerarPDF() {
+            const ficha = document.getElementById('ficha-progressao');
+            const feedbackMsg = document.getElementById('feedback-msg');
+            
+            feedbackMsg.style.display = 'block';
+            document.getElementById('btn-pdf').disabled = true;
+
+            html2canvas(ficha, {
+                scale: 2, 
+                useCORS: true 
+            }).then(canvas => {
+                
+                const { jsPDF } = window.jspdf;
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                
+                const imgWidth = 210;
+                const pageHeight = 297;
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+                let heightLeft = imgHeight;
+                let position = 0;
+                
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+                
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+                
+                const nomeAluno = document.getElementById('nome_aluno').value.trim() || 'Aluno';
+                pdf.save(`Progressao_Exercicios_${nomeAluno.replace(/\s/g, '_')}.pdf`);
+
+                feedbackMsg.style.display = 'none';
+                document.getElementById('btn-pdf').disabled = false;
+            });
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('feedback-msg').style.display = 'none';
+        });
+    </script>
+</body>
+</html>

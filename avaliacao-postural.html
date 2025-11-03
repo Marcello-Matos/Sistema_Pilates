@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ficha de Avaliação Postural - Studio Mariana Marques</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #9B5E62;
+            --secondary: #4D4F50;
+            --accent: #000000;
+            --light-bg: #f8f9fa;
+            --dark-text: #333;
+            --light-text: #6c757d;
+            --border: #e0e0e0;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            color: var(--dark-text);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        header {
+            text-align: center;
+            padding: 25px 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" opacity="0.1"><path d="M0 0h100v100H0z" fill="none"/><path d="M20 20h60v60H20z" stroke="white" stroke-width="2" fill="none"/></svg>');
+            background-size: 50px 50px;
+        }
+
+        .logo-container {
+            text-align: center;
+            padding: 20px 0 15px;
+            background-color: white;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            max-width: 250px;
+            height: auto;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .section {
+            margin: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .section:hover {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        h2 {
+            color: var(--primary);
+            margin-bottom: 18px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            font-size: 1.3rem;
+        }
+
+        h2 i {
+            margin-right: 10px;
+            font-size: 1.3rem;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--dark-text);
+            font-size: 0.95rem;
+        }
+
+        input[type="text"], input[type="number"], input[type="date"], textarea, select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            background-color: white;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(155, 94, 98, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 70px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .checkbox-group, .radio-group {
+            margin-top: 8px;
+        }
+
+        .checkbox-group label, .radio-group label {
+            display: inline-flex;
+            align-items: center;
+            font-weight: normal;
+            margin-right: 15px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .checkbox-group input, .radio-group input {
+            margin-right: 6px;
+            transform: scale(1.1);
+        }
+        
+        /* Estilos específicos da ficha postural */
+        .postural-area {
+            border: 1px dashed var(--border);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+        
+        .postural-area h3 {
+            color: var(--secondary);
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .postural-checks {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        
+        .postural-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .postural-item label {
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+        }
+        
+        .postural-item select {
+            padding: 8px;
+            background-color: var(--light-bg);
+        }
+        
+        .postural-obs textarea {
+            min-height: 50px;
+        }
+        /* Fim Estilos específicos */
+
+        .button-container {
+            text-align: center;
+            margin: 25px 0;
+            padding: 0 20px;
+            display: flex; /* Adiciona flexbox para alinhar botões */
+            justify-content: center;
+            gap: 15px; /* Espaço entre os botões */
+        }
+
+        /* Estilo comum para botões no container */
+        .button-container a, .button-container button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none; /* Remove sublinhado do link */
+            max-width: 280px;
+            width: 100%;
+        }
+
+        #btn-pdf {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 4px 15px rgba(155, 94, 98, 0.3);
+        }
+
+        /* ESTILO PARA O BOTÃO VOLTAR (Novo) */
+        .btn-voltar {
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Efeitos de Hover e Active */
+        #btn-pdf:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(155, 94, 98, 0.4);
+        }
+        .btn-voltar:hover {
+            transform: translateY(-3px);
+            background-color: #e9ecef;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            color: var(--primary);
+        }
+        
+        #btn-pdf:active, .btn-voltar:active {
+            transform: translateY(-1px);
+        }
+
+        #btn-pdf:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .feedback {
+            text-align: center;
+            margin: 15px 0;
+            padding: 12px;
+            border-radius: 8px;
+            background-color: rgba(155, 94, 98, 0.1);
+            color: var(--primary);
+            font-weight: 500;
+            display: none;
+            font-size: 0.9rem;
+        }
+
+        @media print {
+            .button-container {
+                display: none;
+            }
+            
+            .feedback {
+                display: none !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            h1 {
+                font-size: 1.6rem;
+            }
+            
+            .section {
+                margin: 15px;
+                padding: 18px;
+            }
+            
+            .logo {
+                max-width: 200px;
+            }
+            
+            .container {
+                max-width: 95%;
+            }
+            .postural-checks {
+                grid-template-columns: 1fr;
+            }
+            /* Empilha os botões em telas pequenas */
+            .button-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .button-container a, .button-container button {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container pdf-content" id="ficha-postural">
+        
+        <header>
+            <h1>Ficha de Avaliação Postural e Funcional</h1>
+            <p class="subtitle">Análise detalhada do alinhamento e movimento para o Pilates</p>
+        </header>
+
+        <div class="logo-container">
+            <img src="img/logo.png" alt="Logo do Studio" class="logo"> 
+        </div>
+        
+        <div class="section">
+            <h2><i class="fas fa-user"></i> Identificação</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="nome">Nome Completo</label>
+                    <input type="text" id="nome" name="nome" placeholder="Nome do aluno(a)">
+                </div>
+                <div class="form-group" style="flex: 0.5;">
+                    <label for="dataAvaliacao">Data da Avaliação</label>
+                    <input type="date" id="dataAvaliacao" name="dataAvaliacao">
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-ruler-combined"></i> Avaliação Postural Estática</h2>
+            <p class="subtitle" style="margin-bottom: 15px;">Assinale a principal alteração observada em cada item (D=Direito, E=Esquerdo).</p>
+
+            <div class="postural-area">
+                <h3>Vista Anterior</h3>
+                <div class="postural-checks">
+                    <div class="postural-item">
+                        <label for="cabeca_ant">Cabeça/Pescoço</label>
+                        <select id="cabeca_ant" name="cabeca_ant">
+                            <option value="">Normal</option>
+                            <option value="inclinada_d">Inclinada (D)</option>
+                            <option value="inclinada_e">Inclinada (E)</option>
+                        </select>
+                    </div>
+                    <div class="postural-item">
+                        <label for="ombros_ant">Ombros</label>
+                        <select id="ombros_ant" name="ombros_ant">
+                            <option value="">Normal</option>
+                            <option value="elevado_d">Elevado (D)</option>
+                            <option value="elevado_e">Elevado (E)</option>
+                        </select>
+                    </div>
+                    <div class="postural-item">
+                        <label for="membros_sup">Membros Superiores</label>
+                        <select id="membros_sup" name="membros_sup">
+                            <option value="">Normal</option>
+                            <option value="desnivel_d">Desnível (D)</option>
+                            <option value="desnivel_e">Desnível (E)</option>
+                        </select>
+                    </div>
+                    <div class="postural-item">
+                        <label for="pe_ant">Pés</label>
+                        <select id="pe_ant" name="pe_ant">
+                            <option value="">Normal</option>
+                            <option value="prono">Pronado (D/E)</option>
+                            <option value="supinado">Supinado (D/E)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="postural-area">
+                <h3>Vista Posterior</h3>
+                <div class="postural-checks">
+                    <div class="postural-item">
+                        <label for="escapulas">Escápulas</label>
+                        <select id="escapulas" name="escapulas">
+                            <option value="">Normal</option>
+                            <option value="alada_d">Alada (D)</option>
+                            <option value="alada_e">Alada (E)</option>
+                            <option value="desnivel">Desnível</option>
+                        </select>
+                    </div>
+                    <div class="postural-item">
+                        <label for="cintura_pelvica_pos">Cintura Pélvica</label>
+                        <select id="cintura_pelvica_pos" name="cintura_pelvica_pos">
+                            <option value="">Normal</option>
+                            <option value="elevado_d">Elevada (D)</option>
+                            <option value="elevado_e">Elevada (E)</option>
+                        </select>
+                    </div>
+                    <div class="postural-item">
+                        <label for="joelhos_pos">Joelhos</label>
+                        <select id="joelhos_pos" name="joelhos_pos">
+                            <option value="">Normal</option>
+                            <option value="valgo">Valgo</option>
+                            <option value="varo">Varo</option>
+                        </select>
+                    </div>
+                    <div class="postural-item">
+                        <label for="coluna_pos">Coluna Vertebral</label>
+                        <select id="coluna_pos" name="coluna_pos">
+                            <option value="">Normal</option>
+                            <option value="escoliose_d">Escoliose (D)</option>
+                            <option value="escoliose_e">Escoliose (E)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="postural-area">
+                <h3>Vista Lateral</h3>
+                <div class="postural-checks">
+                    <div class="postural-item">
+                        <label for="cabeca_lat">Cabeça/Pescoço</label>
+                        <select id="cabeca_lat" name="cabeca_lat">
+                            <option value="">Normal</option>
+                            <option value="protusa">Protusa (Anteriorizada)</option>
+                        </select>
+                    </div>
+                    <div class="postural-item">
+                        <label for="ombros_lat">Ombros</label>
+                        <select id="ombros_lat" name="ombros_lat">
+                            <option value="">Normal</option>
+                            <option value="protusos">Protusos (Anteriorizados)</option>
+                        </select>
+                    </div>
+                    <div class="postural-item">
+                        <label for="curvas_toraxica">Curva Torácica</label>
+                        <select id="curvas_toraxica" name="curvas_toracica">
+                            <option value="">Normal</option>
+                            <option value="cifose">Aumento (Cifose)</option>
+                            <option value="reta">Diminuição (Reta)</option>
+                        </select>
+                    </div>
+                    <div class="postural-item">
+                        <label for="curvas_lombar">Curva Lombar</label>
+                        <select id="curvas_lombar" name="curvas_lombar">
+                            <option value="">Normal</option>
+                            <option value="lordose">Aumento (Lordose)</option>
+                            <option value="reta">Diminuição (Reta)</option>
+                        </select>
+                    </div>
+                    <div class="postural-item">
+                        <label for="cintura_pelvica_lat">Cintura Pélvica</label>
+                        <select id="cintura_pelvica_lat" name="cintura_pelvica_lat">
+                            <option value="">Normal</option>
+                            <option value="anteversao">Anteversão</option>
+                            <option value="retroversao">Retroversão</option>
+                        </select>
+                    </div>
+                    <div class="postural-item">
+                        <label for="abdominal">Musculatura Abdominal</label>
+                        <select id="abdominal" name="abdominal">
+                            <option value="">Normal</option>
+                            <option value="fraca">Fraca</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+             <div class="form-group postural-obs">
+                <label for="observacoes_postural">Observações da Avaliação Postural</label>
+                <textarea id="observacoes_postural" name="observacoes_postural" rows="3" placeholder="Síndrome do cruzamento superior/inferior, pernas longas, etc."></textarea>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2><i class="fas fa-running"></i> Avaliação Dinâmica / Testes</h2>
+            
+            <div class="form-group">
+                <label for="teste_flexibilidade">Flexibilidade de Isquiotibiais (Teste de Sentar e Alcançar ou similar)</label>
+                <input type="text" id="teste_flexibilidade" name="teste_flexibilidade" placeholder="Ex: Moderada, Encurtamento leve, -2cm, etc.">
+            </div>
+
+            <div class="form-group">
+                <label for="teste_forca_abd">Força Abdominal (Teste de Flexão de Tronco)</label>
+                <input type="text" id="teste_forca_abd" name="teste_forca_abd" placeholder="Ex: Bom, Regular, Fraco.">
+            </div>
+            
+            <div class="form-group">
+                <label for="teste_mobilidade_toracica">Mobilidade Torácica / Rotação</label>
+                <input type="text" id="teste_mobilidade_toracica" name="teste_mobilidade_toracica" placeholder="Ex: Reduzida, Adequada.">
+            </div>
+            
+            <div class="form-group">
+                <label for="teste_equilibrio">Equilíbrio (Ex: Teste Unipodal)</label>
+                <input type="text" id="teste_equilibrio" name="teste_equilibrio" placeholder="Ex: Bom (30s), Instável no lado D.">
+            </div>
+            
+            <div class="form-group">
+                <label for="plano_acao">Foco Principal do Tratamento (Resumo da Estratégia)</label>
+                <textarea id="plano_acao" name="plano_acao" rows="3" placeholder="Ex: Fortalecimento do Core e extensores de tronco, correção da anteversão pélvica."></textarea>
+            </div>
+            
+        </div>
+        
+    </div>
+    
+    <div class="button-container">
+        <a href="index.html" class="btn-voltar">
+             <i class="fas fa-arrow-left"></i> Voltar para Início
+        </a>
+        
+        <button id="btn-pdf" onclick="gerarPDF()">
+            <i class="fas fa-file-pdf"></i> Gerar e Baixar PDF
+        </button>
+    </div>
+    
+    <div class="feedback" id="feedback-msg">Gerando PDF... Aguarde!</div>
+
+    <script>
+        // Função Principal do JavaScript para gerar o PDF
+        window.jsPDF = window.jspdf.jsPDF;
+
+        function gerarPDF() {
+            const ficha = document.getElementById('ficha-postural');
+            const feedbackMsg = document.getElementById('feedback-msg');
+            
+            // 1. Mostrar feedback para o usuário
+            feedbackMsg.style.display = 'block';
+            document.getElementById('btn-pdf').disabled = true;
+
+            // 2. Usar html2canvas para converter o HTML em uma imagem (canvas)
+            html2canvas(ficha, {
+                scale: 2, 
+                useCORS: true 
+            }).then(canvas => {
+                
+                // 3. Inicializar o jsPDF
+                const { jsPDF } = window.jspdf;
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                
+                const imgWidth = 210;
+                const pageHeight = 297;
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+                let heightLeft = imgHeight;
+                let position = 0;
+                
+                // 4. Adicionar a Imagem ao PDF (Tratando múltiplas páginas)
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+                
+                while (heightLeft >= 0) {
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+                
+                // 5. Baixar o arquivo PDF
+                const nomeAluno = document.getElementById('nome').value.trim() || 'Aluno';
+                pdf.save(`AvaliacaoPostural_${nomeAluno.replace(/\s/g, '_')}.pdf`);
+
+                // 6. Resetar o feedback
+                feedbackMsg.style.display = 'none';
+                document.getElementById('btn-pdf').disabled = false;
+            });
+        }
+        
+        // Inicialmente esconder o feedback
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('feedback-msg').style.display = 'none';
+        });
+    </script>
+</body>
+</html>

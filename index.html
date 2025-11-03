@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio Mariana Marques - Sistema Futurista</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --neon-primary: #9B5E62;
+            --neon-secondary: #4D4F50;
+            --neon-accent: #000000;
+            --neon-purple: #7a4a4e;
+            --dark-bg: #0a0a0f;
+            --darker-bg: #050508;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Efeitos de partículas futuristas */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(155, 94, 98, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(77, 79, 80, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(122, 74, 78, 0.05) 0%, transparent 50%);
+            z-index: -2;
+        }
+
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(155, 94, 98, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(155, 94, 98, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 40px 20px;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, var(--neon-primary) 0%, transparent 70%);
+            filter: blur(60px);
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .logo-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 900px;
+            height: 450px;
+            background: radial-gradient(ellipse, var(--neon-primary) 0%, transparent 70%);
+            filter: blur(80px);
+            opacity: 0.4;
+            z-index: -1;
+            animation: pulseGlow 4s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.05); }
+        }
+
+        .logo {
+            width: 900px;
+            height: 450px;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            transition: var(--transition);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                0 0 50px rgba(155, 94, 98, 0.3),
+                inset 0 0 50px rgba(155, 94, 98, 0.1);
+        }
+
+        .logo::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--neon-primary), var(--neon-secondary), var(--neon-accent), var(--neon-purple));
+            border-radius: 32px;
+            z-index: -1;
+            animation: borderRotate 4s linear infinite;
+        }
+
+        @keyframes borderRotate {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+
+        .logo:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 
+                0 0 80px rgba(155, 94, 98, 0.5),
+                inset 0 0 80px rgba(155, 94, 98, 0.2);
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 20px;
+            filter: drop-shadow(0 0 20px rgba(155, 94, 98, 0.5));
+        }
+
+        .title {
+            font-size: 4.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--neon-primary), var(--neon-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(155, 94, 98, 0.5);
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.8rem;
+            font-weight: 300;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 35px;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent, rgba(155, 94, 98, 0.05), transparent);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card:hover {
+            transform: translateY(-15px) scale(1.02);
+            border-color: var(--neon-primary);
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.4),
+                0 0 30px rgba(155, 94, 98, 0.2);
+        }
+
+        .card-icon {
+            width: 90px;
+            height: 90px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+            font-size: 36px;
+            color: var(--text-primary);
+            background: linear-gradient(135deg, var(--neon-primary), var(--neon-secondary));
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-icon::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: var(--transition);
+        }
+
+        .card:hover .card-icon::before {
+            left: 100%;
+        }
+
+        .card:hover .card-icon {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 0 30px rgba(155, 94, 98, 0.5);
+        }
+
+        .card-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+            background: linear-gradient(135deg, var(--neon-primary), var(--neon-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card-description {
+            color: var(--text-secondary);
+            margin-bottom: 25px;
+            line-height: 1.7;
+            flex-grow: 1;
+            font-size: 1.1rem;
+        }
+
+        .card-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--neon-primary), var(--neon-secondary));
+            color: var(--dark-bg);
+            border: none;
+            padding: 18px 30px;
+            border-radius: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            width: 100%;
+            margin-top: auto;
+            font-size: 1.1rem;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .card-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: var(--transition);
+        }
+
+        .card-button:hover::before {
+            left: 100%;
+        }
+
+        .card-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(155, 94, 98, 0.4);
+        }
+
+        .card-button i {
+            margin-left: 12px;
+            transition: var(--transition);
+            font-size: 1.2rem;
+        }
+
+        .card-button:hover i {
+            transform: translateX(8px);
+        }
+
+        .ficha .card-icon {
+            background: linear-gradient(135deg, var(--neon-primary), #8a5256);
+        }
+
+        .contrato .card-icon {
+            background: linear-gradient(135deg, var(--neon-secondary), #3d3f40);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 60px;
+            flex-wrap: wrap;
+            gap: 25px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 35px;
+            display: flex;
+            align-items: center;
+            flex: 1;
+            min-width: 280px;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent, rgba(77, 79, 80, 0.05), transparent);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--neon-secondary);
+            box-shadow: 
+                0 15px 50px rgba(0, 0, 0, 0.3),
+                0 0 25px rgba(77, 79, 80, 0.2);
+        }
+
+        .stat-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 25px;
+            font-size: 32px;
+            color: var(--text-primary);
+            background: linear-gradient(135deg, var(--neon-secondary), var(--neon-purple));
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-value {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            background: linear-gradient(135deg, var(--neon-primary), var(--neon-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-top: 5px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 80px;
+            padding: 30px;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+        }
+
+        .notification {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            padding: 20px 35px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            transform: translateX(150%);
+            transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+            z-index: 1000;
+            border: 1px solid var(--neon-primary);
+            box-shadow: 0 10px 40px rgba(155, 94, 98, 0.3);
+            color: var(--text-primary);
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification i {
+            margin-right: 15px;
+            font-size: 24px;
+            color: var(--neon-primary);
+        }
+
+        /* Animações futuristas */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .card {
+            animation: float 6s ease-in-out infinite;
+            animation-delay: calc(var(--delay) * 0.5s);
+        }
+
+        .card:nth-child(1) { --delay: 0; }
+        .card:nth-child(2) { --delay: 1; }
+        .card:nth-child(3) { --delay: 2; }
+        .card:nth-child(4) { --delay: 3; }
+        .card:nth-child(5) { --delay: 4; }
+        .card:nth-child(6) { --delay: 5; }
+        .card:nth-child(7) { --delay: 6; }
+
+        /* Responsividade */
+        @media (max-width: 1200px) {
+            .logo {
+                width: 700px;
+                height: 350px;
+            }
+            
+            .logo-glow {
+                width: 700px;
+                height: 350px;
+            }
+            
+            .title {
+                font-size: 3.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+                width: 500px;
+                height: 250px;
+            }
+            
+            .logo-glow {
+                width: 500px;
+                height: 250px;
+            }
+            
+            .title {
+                font-size: 2.8rem;
+            }
+            
+            .subtitle {
+                font-size: 1.3rem;
+            }
+            
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                width: 350px;
+                height: 175px;
+            }
+            
+            .logo-glow {
+                width: 350px;
+                height: 175px;
+            }
+            
+            .title {
+                font-size: 2.2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .card {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-overlay"></div>
+    
+    <div class="container">
+        <div class="header">
+            
+            <h1 class="title">STUDIO MARIANA MARQUES</h1>
+            <p class="subtitle">Sistema de gestão futurista para excelência em pilates</p>
+        </div>
+        
+        <div class="dashboard">
+            <div class="card ficha">
+                <div class="card-icon">
+                    <i class="fas fa-file-medical"></i>
+                </div>
+                <h3 class="card-title">Ficha de Anamnese</h3>
+                <p class="card-description">Avaliação completa da saúde e histórico do aluno para um atendimento personalizado e seguro.</p>
+                <button class="card-button" onclick="redirectWithFeedback('ficha-anamnese.html')">
+                    Acessar <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+            
+            <div class="card ficha">
+                <div class="card-icon">
+                    <i class="fas fa-user-md"></i>
+                </div>
+                <h3 class="card-title">Avaliação Postural</h3>
+                <p class="card-description">Análise detalhada da postura e alinhamento corporal para prescrição de exercícios corretivos.</p>
+                <button class="card-button" onclick="redirectWithFeedback('avaliacao-postural.html')">
+                    Acessar <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+            
+            <div class="card ficha">
+                <div class="card-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3 class="card-title">Progressão de Exercícios</h3>
+                <p class="card-description">Acompanhamento da evolução e ajuste de cargas e dificuldades dos exercícios prescritos.</p>
+                <button class="card-button" onclick="redirectWithFeedback('progressao-exercicios.html')">
+                    Acessar <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+            
+            <div class="card ficha">
+                <div class="card-icon">
+                    <i class="fas fa-calendar-day"></i>
+                </div>
+                <h3 class="card-title">Evolução Diária</h3>
+                <p class="card-description">Registro diário de desempenho, observações e evolução do aluno em cada sessão.</p>
+                <button class="card-button" onclick="redirectWithFeedback('evolucao-diaria.html')">
+                    Acessar <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+            
+            <div class="card contrato">
+                <div class="card-icon">
+                    <i class="fas fa-file-contract"></i>
+                </div>
+                <h3 class="card-title">Contrato Instrutor</h3>
+                <p class="card-description">Modelos de contrato para profissionais instrutores com cláusulas personalizáveis.</p>
+                <button class="card-button" onclick="redirectWithFeedback('contrato-instrutor.html')">
+                    Acessar <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+            
+            <div class="card contrato">
+                <div class="card-icon">
+                    <i class="fas fa-user-graduate"></i>
+                </div>
+                <h3 class="card-title">Contrato Aluno</h3>
+                <p class="card-description">Contratos personalizados para alunos com termos, condições e planos de pagamento.</p>
+                <button class="card-button" onclick="redirectWithFeedback('contrato-aluno.html')">
+                    Acessar <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+            
+            <div class="card contrato">
+                <div class="card-icon">
+                    <i class="fas fa-handshake"></i>
+                </div>
+                <h3 class="card-title">Contrato de Distrato</h3>
+                <p class="card-description">Documentos para rescisão de contratos de forma clara e profissional.</p>
+                <button class="card-button" onclick="redirectWithFeedback('contrato-distrato.html')">
+                    Acessar <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Studio Mariana Marques &copy; 2025 - Sistema de Gestão Futurista</p>
+        </div>
+    </div>
+    
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notification-text">Redirecionando...</span>
+    </div>
+
+    <script>
+        // Função para redirecionar com feedback visual futurista
+        function redirectWithFeedback(url) {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notification-text');
+            
+            // Texto personalizado baseado na página
+            let message = "Redirecionando...";
+            if (url.includes('anamnese')) message = "Abrindo Ficha de Anamnese...";
+            else if (url.includes('postural')) message = "Abrindo Avaliação Postural...";
+            else if (url.includes('progressao')) message = "Abrindo Progressão de Exercícios...";
+            else if (url.includes('evolucao')) message = "Abrindo Evolução Diária...";
+            else if (url.includes('instrutor')) message = "Abrindo Contrato de Instrutor...";
+            else if (url.includes('aluno')) message = "Abrindo Contrato de Aluno...";
+            else if (url.includes('distrato')) message = "Abrindo Contrato de Distrato...";
+            
+            notificationText.textContent = message;
+            notification.classList.add('show');
+            
+            // Redirecionar após um breve delay para mostrar a notificação
+            setTimeout(() => {
+                window.location.href = url;
+            }, 800);
+        }
+        
+        // Efeito de digitação futurista no subtítulo
+        document.addEventListener('DOMContentLoaded', function() {
+            const subtitle = document.querySelector('.subtitle');
+            const originalText = subtitle.textContent;
+            subtitle.textContent = '';
+            
+            let i = 0;
+            const typeWriter = () => {
+                if (i < originalText.length) {
+                    subtitle.textContent += originalText.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 40);
+                }
+            };
+            
+            setTimeout(typeWriter, 1500);
+        });
+        
+        // Efeito de contador nas estatísticas
+        function animateValue(element, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                element.innerHTML = Math.floor(progress * (end - start) + start);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+        
+        // Iniciar animação dos contadores quando a página carregar
+        window.addEventListener('load', () => {
+            const statValues = document.querySelectorAll('.stat-value');
+            animateValue(statValues[0], 0, 127, 2000);
+            animateValue(statValues[1], 0, 42, 1500);
+            animateValue(statValues[2], 0, 94, 1800);
+        });
+    </script>
+</body>
+</html>
